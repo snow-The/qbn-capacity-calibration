@@ -116,11 +116,19 @@ typst compile paper.typ          # 產生 paper.pdf
 - [ ] **作者貢獻聲明**（多數期刊強制；先寫好省得以後改）
 - [ ] **LLM 使用揭露**（**若你用了 AI 協助，必須揭露**）
 
-### ★ LLM 使用揭露（本專案一定要寫）
+### ★ LLM 使用披露（arXiv 與 Quantum 都有要求）
 
-Quantum 官方要求（arXiv 目前無強制，但這是學術誠信的趨勢）：
+**arXiv 官方要求**（info.arxiv.org/help/moderation/index.html，「Policy for authors’ use of generative AI language tools」，2026-09-23 查證）：
 
-> 「If a **Large Language Model** or other AI model was used in producing the work, the scope of that use needs to be disclosed in the author contribution statement (examples of uses to be declared: as a grammar-checker, for reformatting, for text production, for image production, for bibliographic research, **for production of code or calculations**).」
+> we continue to require authors to **report in their work any significant use of sophisticated tools**, such as instruments and software; we now include in particular **text-to-text generative AI** among those that should be reported consistent with subject standards for methodology.
+
+> by signing their name as an author of a paper, they each individually take full responsibility for all its contents, **irrespective of how the contents were generated**.
+
+> generative AI language tools **should not be listed as an author**.
+
+**Quantum 期刊**（quantum-journal.org/instructions/authors/，2026-09-23 逐字查證）：AI 使用範圍要写進 **author contribution statement**，例如：文法检查、改写、文字生成、圖像生成、書目查找、**程式碼與計算生成**），且明言「If no AI was used in producing the work, authors are welcome to state this.」。
+
+> ⚠️ **更正 2026-09-23**：本檔原先写「arXiv 目前無強制」，**那是錯的**——arXiv 的 Content Moderation 政策把 text-to-text 生成式 AI 明列為應回報的工具。因此，本專案**不能不写**披露。
 
 **本專案要揭露的範圍**（誠實填寫）：
 
