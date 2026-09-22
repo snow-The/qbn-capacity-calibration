@@ -34,6 +34,8 @@ warn_en.txt
 # --- 論文 PDF 不進版控：只保留 arXiv 投稿包 ---
 paper/*.pdf
 paper/*.png
+paper/paper*.tex
+paper/submission/
 
 # --- 壓縮檔：只保留 arXiv 包 ---
 *.zip

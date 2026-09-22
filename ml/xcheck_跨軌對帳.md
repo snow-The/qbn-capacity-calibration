@@ -48,7 +48,7 @@ target: nvidia
 state dim = 1024  sum = 1.000000715256     ← 1 + 7e-7
 ```
 
-$7	imes10^{-7} approx 2^{-24}$，是 **float32** 的特徵。顯式指定 CPU 目標後：
+$7 \times 10^{-7} \approx 2^{-24}$，是 **float32** 的特徵。顯式指定 CPU 目標後：
 
 ```
 target: qpp-cpu

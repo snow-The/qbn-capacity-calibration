@@ -178,12 +178,14 @@ the second one changed what the hardware section of the paper is able to claim.
 
 理論部分只用大學量子力學的工具寫成，並經 **Lean 4 形式化驗證**（6 個定理、無 `sorry`、
 僅依賴三個標準公理）。形式化過程中還逼出了一處修正：$R_Y(\pi)$ 其實**是**么模仿塊矩陣，
-精確條件是 $R_Y(\theta)$ 為么模仿塊 $iff 	heta in pimathbb{Z}$——論文原本只寫了一個條件，已更正。
+精確條件是 $R_Y(\theta)$ 為么模仿塊 $\iff \theta \in \pi\mathbb{Z}$——論文原本只寫了一個條件，已更正。
 
 ## License
 
-The two kinds of content carry different licences (see `LICENSE` for the full texts):
+The two kinds of content carry different licences:
 
-- **Paper text and documentation** (`paper/*.typ`, `theory/`, `docs/`, this README):
-  [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0).
-- **Code** (`ml/`, `hardware/`, `c1/`, `formal/`, `paper/make_*.py`): MIT.
+- **Paper text and documentation** (`paper/*.typ`, `paper/*.md`, `theory/`, this README):
+  [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0);
+  full legal text in `LICENSE`.
+- **Code** (`ml/`, `hardware/`, `c1/`, `formal/`, `dev/`, `tools/`, `paper/make_*.py`): MIT;
+  full text in `LICENSE-CODE`.
