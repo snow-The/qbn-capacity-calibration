@@ -42,7 +42,8 @@
     This work is a controlled examination of using a quantum circuit as the output
     layer of a classifier, not an attempt to demonstrate quantum advantage. Building
     on the hybrid Bayesian quantum--classical classifier of Wang et al. (2026), we
-    reproduce its 4-qubit quantum layer with CUDA-Q and extend it with three experiments
+    reproduce its 4-qubit quantum layer with CUDA-Q, a quantum-circuit simulator,
+    and extend it with three experiments
     that the original study does not cover: (i) a *capacity cliff* scan over qubit
     count and circuit depth, testing whether performance is monotonic in trainable
     capacity; (ii) a *calibration ablation* in which a dephasing operator makes
@@ -84,9 +85,12 @@ A class of hybrid architectures has appeared in recent years: a classical networ
 extracts features and a quantum circuit then acts as the decision layer @wang2026.
 Such work reports improvements in both accuracy and calibration, but it shares one
 structural feature---*the quantum layer is never treated as a controlled variable
-in an ablation*.
+in an ablation*. (An *ablation*, in the machine-learning sense, is the practice of
+deleting one component of a model so that its contribution can be measured in
+isolation.)
 Take @wang2026: its state-of-the-art design is a "single-variable" comparison in
-which all models share the same preprocessing and classification head, and only the
+which all models share the same preprocessing and classification head (the final
+network layer that turns the extracted features into class scores), and only the
 first convolutional layer is changed from deterministic to Bayesian.
 The quantum layer is an identical constant across both arms.
 
@@ -115,8 +119,10 @@ quantumness itself is necessary*. This work supplies that missing step.
     shallower slices are masked by under-optimisation.
     ($n >= 3$ is a hard requirement: eight class probabilities need at least a
     3-qubit projective readout.)
-  + We reproduce the 4-qubit quantum layer of @wang2026 with CUDA-Q and
-    cross-validate it against an independent NumPy implementation
+  + We reproduce the 4-qubit quantum layer of @wang2026 with CUDA-Q (a
+    quantum-circuit simulation framework) and cross-validate it---that is, check it
+    against a second implementation written independently in NumPy (the standard
+    numerical library for Python)---
     ($4.16 times 10^(-17)$); this item is positioned as *reproducibility evidence*,
     not as a methodological contribution. The two experiments of Section 6 are
     endorsed separately on the reference track: the largest capacity-scan circuit
@@ -138,15 +144,18 @@ quantumness itself is necessary*. This work supplies that missing step.
 The three-stage skeleton of @wang2026 is "classical feature extraction -> quantum
 state evolution -> classical decision". Its quantum layer uses a 4-qubit,
 depth-2 parameterised quantum circuit (PQC), and the readout measures the
-Pauli-$Z$ expectation values of all qubits into a vector that a linear layer then
-classifies. Its gains come explicitly from the *classical Bayesian front end*:
+Pauli-$Z$ expectation values of all qubits into a vector that a linear layer---a
+single matrix multiplication plus a bias, the simplest learnable
+transformation---then classifies. Its gains come explicitly from the *classical Bayesian front end*:
 MNIST (a handwritten-digit image dataset) $+2.32$ and Fashion-MNIST (a clothing-image
 dataset) $+5.61$ percentage points, with the quantum layer held fixed.
 
 == Known limits of capacity and distillation
 
-@wada2025 reports two related phenomena in the study of distillation for static
-word embeddings. First, when the student dimension is reduced to $d = 64$,
+@wada2025 reports two related phenomena in the study of *distillation* for static
+word embeddings. (Distillation trains a small "student" model to imitate a larger
+"teacher" model; an *embedding* represents a piece of text as a fixed-length vector
+of real numbers.) First, when the student dimension is reduced to $d = 64$,
 knowledge distillation actually degrades performance ($63.8 -> 52.5$). Second,
 switching to a stronger teacher (GTE-large, a general-purpose text-embedding model) makes the student worse
 ($62.9$ against $63.8$ for GTE-base), which the authors attribute to an excessive
@@ -483,7 +492,7 @@ Every proposition above has an independent numerical check. The scripts are
     columns: (auto, 1fr, auto),
     table.header([*Proposition*], [*How it is checked*], [*Result*]),
     [Lemma 1 (monomial permutation)], [compare both routes on every basis operator $ket(i) bra(j)$], [$0.000 times 10^0$],
-    [Theorem 1 (commutation)], [as above, plus a superoperator commutator check], [$0.000 times 10^0$],
+    [Theorem 1 (commutation)], [as above, plus the same commutator lifted to the superoperator (the linear map induced on density matrices)], [$0.000 times 10^0$],
     [Corollary ($op("CX")$ commutes)], [4 (control, target) pairs, $op("CZ")$, $op("SWAP")$], [all $0.000 times 10^0$],
     [Converse of Theorem 1 ($R_Y$)], [$H$, $R_Y(0.7)$, $R_X(0.7)$], [$5.0 times 10^(-1)$, $3.221 times 10^(-1)$, $3.221 times 10^(-1)$],
     [$R_Z$ does commute (sharpening)], [$R_Z(0.7)$], [$0.000 times 10^0$],
@@ -598,6 +607,9 @@ exactly the map that projects a quantum node back onto a classical Bayesian netw
 
 == Cross-validation protocol
 
+*Cross-validation* here means computing every quantum-circuit result twice, on two
+independently written simulators, and requiring the two answers to agree---a check on
+the implementation, not the statistical resampling scheme that shares the name.
 Every quantum-circuit result is computed on both CUDA-Q and an independently
 implemented pure-NumPy state-vector simulator.
 The maximum absolute error between the two probability vectors is required to be
@@ -646,11 +658,14 @@ Beyond accuracy we report:
 negative log-likelihood (NLL), the Brier score (the mean squared error of the
 predicted probabilities against the true labels),
 expected calibration error (ECE, $M = 10$ equal-width bins) together with reliability
-diagrams, and an uncertainty decomposition into predictive entropy and mutual information.
+diagrams (plots of claimed confidence against observed accuracy), and an uncertainty
+decomposition into predictive entropy and mutual information.
 
 #block(inset: (x: 1em), fill: rgb("#fff4e5"), radius: 2pt)[
-  *The defence point for a fair comparison*: temperature scaling does not change the
-  top-1 label, so it is a means of improving calibration at zero cost in accuracy.
+  *The defence point for a fair comparison*: temperature scaling---dividing the
+  model's output scores by a single fitted constant, which softens or sharpens the
+  predicted distribution---does not change the highest-scoring label, so it is a
+  means of improving calibration at zero cost in accuracy.
   Any calibration advantage of the quantum layer *must beat the temperature-scaled
   baseline*, otherwise the conclusion does not hold.
 ]
@@ -729,9 +744,10 @@ two-dimensional grid under a *fixed readout rule*, together with this downward t
 The four arms are trained under *the same model, the same data and the same number of
 trainable parameters* ($20$ angles) for the same number of steps ($800$), with each arm
 repeated across $5$ seeds; the only difference is the inserted channel and its position.
-The dephasing and depolarising arms have their *mean purity* matched (target purity
-$0.0742$; depolarising rate $p = 0.5657$, agreeing with the closed-form solution to
-$10^(-15)$).
+The dephasing and depolarising arms have their *mean purity* matched (purity is
+$op("Tr")(rho^2)$: it equals $1$ for a pure state and decreases as the state becomes
+mixed; target purity $0.0742$; depolarising rate $p = 0.5657$, agreeing with the
+closed-form solution to $10^(-15)$).
 
 #figure(table(
   columns: (auto, auto, auto, auto, auto, auto, auto),
@@ -819,7 +835,8 @@ $0.49$ each. In other words, *the difference this device produces when it simply
 identical circuit again is larger than the entire effect of the four delayed arms*.
 
 *Why $8192$ shots could not see it.* This is a question of statistical *power*, not of the
-channel being absent. The cQASM specification defines the `wait` parameter as a number whose
+channel being absent. cQASM, the assembly language in which circuits are submitted
+to Quantum Inspire, defines the `wait` parameter as a number whose
 unit is "the duration of a single-qubit gate on the backend, i.e. an execution cycle",
 and the Quantum Inspire knowledge base likewise says "idle the qubit ... for the given
 number of cycles". The Tuna backends have a native single-qubit gate time of $20$ ns and the `wait` argument
@@ -894,8 +911,9 @@ $tau = 1024$.
 
 The shape of the curve is the shape of $T_1$ relaxation: $max abs(Delta P)$ rises from $0.644$ at
 $tau = 4096$ through $0.735$ at $16384$ to $0.811$ at $65536$, while $P(00000)$ rises from
-$0.657$ through $0.748$ to $0.823$. The $0.823$ rather than $1$ is the readout assignment-fidelity
-ceiling, i.e. the state has fully relaxed to $|0 dots 0 angle$.
+$0.657$ through $0.748$ to $0.823$. The $0.823$ rather than $1$ is the readout *assignment-fidelity* ceiling
+(the probability that a qubit prepared in $ket(0)$ is in fact read out as $0$),
+i.e. the state has fully relaxed to $|0 dots 0 angle$.
 The rise between $1024$ and $4096$ cycles fixes the $T_1$ scale at about $10^3$ cycles, i.e. tens
 of microseconds, consistent with a typical superconducting transmon.
 
@@ -984,8 +1002,9 @@ the largest capacity-scan circuit at $3.47 times 10^(-18)$ and the ablation circ
 $8.33 times 10^(-17)$, and further validated end-to-end through the cloud API of
 Quafu (the quantum cloud platform of the Chinese Academy of Sciences; API stands for
 application programming interface)
-on its official simulator, where the transpiled circuit agrees with the golden
-vector to $8.88 times 10^(-16)$), and
+on its official simulator, where the circuit after transpilation (translation into
+the device's native gate set) agrees with the golden vector (an independently
+computed reference result) to $8.88 times 10^(-16)$), and
 (ii) a set of controlled ablation designs that use the dephasing classicalisation
 operator as the sole variable *within a single model* and scan the $(Q, L)$
 two-dimensional grid under a *fixed readout rule*.
