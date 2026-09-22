@@ -12,6 +12,12 @@ import pathlib
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+# typography: match the LaTeX submission (Times body, STIX math)
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Times New Roman', 'Nimbus Roman', 'DejaVu Serif']
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['axes.unicode_minus'] = False
 import numpy as np
 
 # 本檔放在 .../qbn-capacity-calibration/paper/ 下，路徑由 __file__ 推導

@@ -20,6 +20,12 @@ import pathlib
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+# typography: match the LaTeX submission (Times body, STIX math)
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Times New Roman', 'Nimbus Roman', 'DejaVu Serif']
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['axes.unicode_minus'] = False
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -142,7 +148,7 @@ def main() -> int:
         "Every circuit is evaluated twice:",
         "   - CUDA-Q (formal track; the reported numbers)",
         "   - an independent NumPy state-vector simulator",
-        "Agreement criterion:  max |\u0394P| < 1e-10.",
+        "Agreement criterion:  max $|\Delta P| < 10^{-10}$.",
         "Both tracks share one golden-vector test set,",
         "so a silent divergence cannot pass unnoticed.",
     ]

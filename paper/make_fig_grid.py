@@ -18,6 +18,12 @@ import pathlib
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+# typography: match the LaTeX submission (Times body, STIX math)
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Times New Roman', 'Nimbus Roman', 'DejaVu Serif']
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['axes.unicode_minus'] = False
 import numpy as np
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -90,13 +96,13 @@ def main() -> int:
         ys = [acc[NS.index(n), DS.index(d)] for n in xs]
         if xs:
             axes[2].plot(xs, ys, marker="o", ms=4.5, lw=1.6, color=c, label=f"$L$ = {d}")
-    axes[2].axhline(CHANCE, ls=":", c="gray", lw=1.1)
+    axes[2].axhline(CHANCE, ls=":", c="gray", lw=1.1, label="chance (1/8)")
     axes[2].set_xlabel("Number of qubits $n$")
     axes[2].set_ylabel("Test accuracy")
     axes[2].set_xticks(NS)
     axes[2].grid(alpha=0.25, lw=0.6)
     # 圖例放左下：L=4/6/8 這三條切面最低也才 0.32，左下方到隨機線之間是空的
-    axes[2].legend(fontsize=7.5, frameon=False, loc="lower left")
+    axes[2].legend(fontsize=7.5, frameon=False, loc="best")
     axes[2].set_title("(c) Accuracy vs. $n$ at fixed depth", fontsize=9.5)
     fig.tight_layout()
 
