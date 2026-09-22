@@ -607,7 +607,9 @@ independently written simulators, and requiring the two answers to agree---a che
 the implementation, not the statistical resampling scheme that shares the name.
 Every quantum-circuit result is computed on both CUDA-Q and an independently
 implemented pure-NumPy state-vector simulator.
-The maximum absolute error between the two probability vectors is required to be
+The maximum absolute error between the two probability vectors --- written
+$max abs(Delta P)$, with $Delta p_i$ the difference between the two probabilities
+of outcome $i$ and the maximum taken over all outcomes --- is required to be
 below $10^(-10)$. The measured value depends on the circuit, so we list it item by item:
 
 #figure(table(
@@ -766,7 +768,8 @@ Three points are worth making:
   The mean maximum probability of arm B is $0.1307$, which for $8$ classes is
   $1 slash 8$; the KL divergence (Kullback--Leibler divergence, a measure of how much two
   distributions differ) of its mean predictive distribution from the uniform
-  distribution is $0.0000$; and the per-qubit $Z$ variance falls from $0.0226$ to
+  distribution is $0.0000$; and the per-qubit $Z$ variance (the variance over the test set of the expectation
+  value of $Z$ on each qubit, averaged across qubits) falls from $0.0226$ to
   $0.0001$ (roughly one part in $226$).
   Its ECE is in fact *lower* ($0.0993$ against $0.1079$), but this is an artefact of
   uniform predictions: for the same arm the NLL degrades from $1.8510$ to $2.0558$ and
@@ -788,9 +791,12 @@ This subsection measures it -- and the first thing it measures is the scale.
 with a native gate set that contains $op("CZ")$ but not $op("CX")$.
 The $5$-qubit ring circuit of this study has *no* one-to-one mapping onto that topology
 (the graph contains no $5$-cycle), so it is routed with $op("SWAP")$ gates before submission.
-After routing, the compiled circuits of all five arms are *identical*
-($op("CX") = 10$, $op("SWAP") = 2$, depth $18$, $42$ gates);
-the only difference between arms A and C is five `wait` instructions -- a clean controlled comparison.
+After routing, all five arms carry the same two-qubit gate content
+($op("CX") = 10$, $op("SWAP") = 2$); arm A compiles to depth $18$ with $42$ gates
+and every delayed arm to depth $19$ with $47$ --- the difference being the five
+`wait` instructions. Those waits add one layer but no two-qubit gate, and
+their count does not grow with the delay, so *the delay itself is the only
+variable*: a clean controlled comparison.
 Each arm contributes $8$ samples, $40$ circuits in total, at $8192$ shots each; the four arms are listed in @tbl:hw-ablation.
 The bit order is measured rather than assumed: applying an $X$ gate to $q_0$, $q_2$ and $q_4$
 returns `00001`, `00100` and `10000` respectively, so the platform's classical bit order
@@ -816,7 +822,9 @@ The null is thus $max abs(Delta P) = 0.00910 plus.minus 0.00109$ (95th percentil
   [C1 dephasing (end of circuit)], [$(0, 1)$], [0.01057], [0.01718], [1.16], [0.093],
   [C4 dephasing (end of circuit)], [$(0, 4)$], [0.00966], [0.01807], [1.06], [0.295],
 ), caption: [The four delayed arms against the undelayed arm A on Tuna-17, $8$ samples and
-  $8192$ shots per arm. The ratio is with respect to the pure shot-noise null ($0.00910$).
+  $8192$ shots per arm. TVD is the total variation distance,
+  $0.5 sum_i abs(Delta p_i)$, from the readout distribution of arm A.
+  The ratio is with respect to the pure shot-noise null ($0.00910$).
   The largest value, $1.29$, is also the only marginal entry under a Bonferroni correction
   across four arms ($alpha = 0.05 slash 4 = 0.0125$), and it does not survive that correction.],) <tbl:hw-ablation>
 
