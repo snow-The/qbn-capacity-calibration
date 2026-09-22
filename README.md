@@ -5,24 +5,6 @@ Department of Physics, Chung Yuan Christian University, Taoyuan, Taiwan
 
 ---
 
-## Where to start
-
-The repository is documented in Chinese, in a layered set:
-
-| Document | What it gives you |
-|---|---|
-| [`docs/00-開始閱讀.md`](docs/00-開始閱讀.md) | Entry point: navigation, three reading routes, command cheat sheet |
-| [`docs/01-專案導讀.md`](docs/01-專案導讀.md) | Eight-minute orientation: the question, the three experiments, the numbers |
-| [`docs/02-各部分要點.md`](docs/02-各部分要點.md) | Per-component key points, common misreadings and how to answer them |
-| [`docs/03-負責範圍.md`](docs/03-負責範圍.md) | Who is responsible for what, down to individual paper sections |
-
-The paper exists in two editions: **English LaTeX is the submission version**; the Chinese Typst
-edition is for internal reading. Typst is the single source of content, and the LaTeX is generated
-from it, so the two cannot drift apart.
-
----
-
-
 ## What this is
 
 This repository contains the source, code and verification artefacts for a study that asks a
