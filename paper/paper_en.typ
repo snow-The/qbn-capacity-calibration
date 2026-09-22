@@ -735,7 +735,7 @@ Three points are worth making:
 + *Front-end dephasing crushes the model into an uninformative predictor.*
   The mean maximum probability of arm B is $0.1307$, which for $8$ classes is
   $1 slash 8$; the KL divergence (Kullback--Leibler divergence, a measure of how much two
-distributions differ) of its mean predictive distribution from the uniform
+  distributions differ) of its mean predictive distribution from the uniform
   distribution is $0.0000$; and the per-qubit $Z$ variance falls from $0.0226$ to
   $0.0001$ (roughly one part in $226$).
   Its ECE is in fact *lower* ($0.0993$ against $0.1079$), but this is an artefact of
