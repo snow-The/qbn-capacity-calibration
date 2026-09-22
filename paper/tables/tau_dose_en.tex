@@ -4,11 +4,12 @@
 the same circuit, changing only the number of \texttt{wait} cycles
 before measurement, at \(65536\) shots per point.
 \(\max\left| {\Delta P} \right|\) and TVD are against the \(\tau = 0\)
-\(32\)-dimensional readout distribution; \(\tau = 1\)--\(64\) use \(7\)
-samples each and the rest one each. ``vs. repeatability'' is relative to
-the same-circuit different-time repeatability of \(0.01105\); the first
-three points are \textbf{below} \(1\), i.e. they do not exceed what this
-device reproduces when it simply runs the identical circuit
+\(32\)-dimensional readout distribution. \(\tau \leq 4096\) use \(8\)
+samples each, \(16384\) uses \(7\) and \(65536\) uses \(1\). ``vs.
+repeatability'' is relative to the same-circuit different-time
+repeatability of \(0.01553\) (\(8\) samples); the first three points are
+\textbf{below} \(1\), i.e. they do not exceed what this device
+reproduces when it simply runs the identical circuit
 again.}
 \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}llllll@{}}
@@ -17,16 +18,16 @@ again.}
 \textbf{\(\max\left| {\Delta P} \right|\)} & \textbf{vs. repeatability}
 & \textbf{TVD} & \textbf{KL vs uniform} \\
 \midrule
-0 & 0.01266 & 0.00000 & --- & 0.00000 & 0.29329 \\
-1 & 0.01305 & 0.00283 & 0.26 & 0.01267 & 0.29050 \\
-4 & 0.01343 & 0.00427 & 0.39 & 0.01707 & 0.28260 \\
-16 & 0.01569 & 0.00726 & 0.66 & 0.02898 & 0.26850 \\
-64 & 0.02592 & 0.02438 & 2.21 & 0.10412 & 0.22182 \\
-256 & 0.06920 & 0.05727 & 5.18 & 0.31583 & 0.24559 \\
-1024 & 0.31511 & 0.30299 & 27.43 & 0.63237 & 0.97887 \\
-4096 & 0.76219 & 0.75008 & 67.90 & 0.85719 & 2.45674 \\
-16384 & 0.82329 & 0.81117 & 73.43 & 0.87480 & 2.68381 \\
-65536 & 0.82332 & 0.81120 & 73.43 & 0.87511 & 2.68495 \\
+0 & 0.01274 & 0.00000 & --- & 0.00000 & 0.29293 \\
+1 & 0.01248 & 0.00450 & 0.29 & 0.02382 & 0.29034 \\
+4 & 0.01338 & 0.00400 & 0.26 & 0.01645 & 0.28216 \\
+16 & 0.01567 & 0.00709 & 0.46 & 0.02893 & 0.26830 \\
+64 & 0.02519 & 0.02413 & 1.55 & 0.10610 & 0.22129 \\
+256 & 0.05874 & 0.05456 & 3.51 & 0.27578 & 0.22295 \\
+1024 & 0.26750 & 0.25476 & 16.41 & 0.57884 & 0.86265 \\
+4096 & 0.65714 & 0.64440 & 41.50 & 0.83695 & 2.25541 \\
+16384 & 0.74809 & 0.73543 & 47.37 & 0.86512 & 2.55201 \\
+65536 & 0.82332 & 0.81120 & 52.25 & 0.87511 & 2.68495 \\
 \bottomrule
 \end{tabular}
 }

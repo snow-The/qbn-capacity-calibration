@@ -39,7 +39,12 @@ PROJECT_NAME = os.environ.get("TAU_PROJECT", "qbn-tau-dose-response")
 
 SHOTS = int(os.environ.get("TAU_SHOTS", "65536"))
 BACKEND_TYPE_ID = 7          # Tuna-17
-CHUNK = 5                    # backend_type.max_jobs_per_batch_job
+# ★ 教訓：job_execution_time_limit 是「整個 batch」的 300 秒預算，不是每顆電路的。
+#   實測單顆電路執行時間 30s ~ 707s（且與 tau 無關，是裝置端排隊/校準造成的），
+#   所以 5 顆綁一個 batch 會連坐：一顆慢就整個 batch 被 cancel。
+#   本輪 17 個 batch 中 9 個發生損失、13 顆被 cancel，全部是這個原因。
+#   改成 1 顆一個 batch：吞吐量不變（裝置一次只跑一個 batch），但不再有連坐。
+CHUNK = int(os.environ.get("TAU_CHUNK", "1"))   # 預設 1；上限為 backend_type.max_jobs_per_batch_job=5
 MAX_INFLIGHT = 5             # backend_type.batchjobs_per_queue_limit
 POLL_S = 20
 MAX_ATTEMPTS = 3
@@ -143,6 +148,11 @@ async def main():
                 BatchJobIn(backend_type_id=BACKEND_TYPE_ID))
             rec = {"bj": bj.id, "job_ids": {}}
             for e in chunk:
+                # 佇列等待很久時，結果常常在等待期間就落地了；送出前再確認一次，
+                # 避免把已經完成的電路重複送上真機（浪費共享裝置的時間）。
+                if os.path.exists(result_path(e)):
+                    log("  skip %s/k%d (已完成)" % (e["tag"], e["k"]))
+                    continue
                 nm = "%s_k%02d" % (e["tag"], e["k"])
                 alg = await AlgorithmsApi(api_client).create_algorithm_algorithms_post(
                     AlgorithmIn(project_id=project.id, type=AlgorithmType.QUANTUM,

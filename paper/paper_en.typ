@@ -793,10 +793,11 @@ The null is thus $max abs(Delta P) = 0.00910 plus.minus 0.00109$ (95th percentil
 *A same-circuit, different-time drift control.* The easiest entry in that table to
 over-read is B4 at $1.29$. Deciding whether it is physics needs a control with no variable
 at all: the circuit of the $tau = 0$ block is gate-for-gate identical to arm A, and was only
-submitted about an hour later. Subtracting the two gives $max abs(Delta P) = 0.00883$
-(two samples: $0.00755$ and $0.01012$), which is indistinguishable from the pure shot-noise
-value of $0.00910$. In other words, *hardware drift over an hour sits below the noise floor,
-and the differences of all four delayed arms sit in that same range*.
+submitted about an hour later at a different shot count. Subtracting the two gives
+$max abs(Delta P) = 0.01624$ ($8$ samples, median $0.01683$), and *every one of the four
+delayed arms is less than half of that*: B1 is $0.48$ times it, B4 $0.55$, and C1 and C4
+$0.49$ each. In other words, *the difference this device produces when it simply runs the
+identical circuit again is larger than the entire effect of the four delayed arms*.
 
 *Why $8192$ shots could not see it.* This is a question of statistical *power*, not of the
 channel being absent. The cQASM specification defines the `wait` parameter as a number whose
@@ -807,9 +808,10 @@ is a count of those cycles, so $1$--$4$ cycles cover only a small fraction of $T
 correspondingly small; the noise floor at $8192$ shots is $0.00910$, which is $3.5$ times
 coarser than the $0.00260$ the next subsection reaches at $65536$ shots.
 
-The meaning of this result is therefore a *qualification*, not a refutation: the four-arm
-protocol simply does not have the power, at $8192$ shots, to resolve a channel of that scale,
-and so cannot be used to test the hardware corollary of Theorem 2.
+The meaning of this result is therefore a *qualification*, not a refutation: at $8192$ shots
+the resolution of the four-arm protocol is limited by the device's own reproducibility, and
+that limit is larger than the effect it is trying to measure. It therefore cannot be used to
+test the hardware corollary of Theorem 2.
 The next subsection raises the shot count eightfold and sweeps the delay across five orders
 of magnitude -- and the signal appears.
 
@@ -847,9 +849,9 @@ statistically resolvable", and gives $0.00261$.
 (b) *Same-circuit, different-time repeatability*: the $tau = 0$ blocks of the two sweeps are
 *gate-for-gate identical* circuits at the same shot count, submitted at different times.
 Subtracting them gives the spread this device actually produces when it simply runs the identical
-circuit again: $0.01105$ (two samples: $0.00443$ and $0.01767$).
+circuit again: $0.01553$ ($8$ samples).
 Real hardware is not random only through shots -- drift and calibration move it too -- so (b) is
-more than four times larger than (a).
+six times larger than (a).
 
 #include "tables/tau_dose_en.typ"
 
@@ -857,25 +859,26 @@ more than four times larger than (a).
   image("figs/tau_dose.svg", width: 100%),
   caption: [Delay dose response. Panel (a) is the deviation from the undelayed circuit: the blue
     band is the $95%$ interval of the pure shot-noise null and the red dashed line is this
-    device's *same-circuit different-time repeatability* of $0.01105$. Panel (b) is the
-    probability that the readout returns all zeros. Both saturate past $tau = 4096$, and the
-    saturation point is set by $T_1$.],
+    device's *same-circuit different-time repeatability* of $0.01553$. Panel (b) is the
+    probability that the readout returns all zeros. Both curves are governed by $T_1$ relaxation
+    and approach their ceiling near $tau = 65536$.],
 ) <fig:tau-curve>
 
 *No effect smaller than (b) can be attributed to the delay*, and this changes the reading
-directly. The points $tau = 1$, $4$ and $16$ are $0.26$, $0.39$ and $0.66$ times the repeatability:
-they *pass* the shot-noise test ($1.09$, $1.64$ and $2.78$ times) while sitting entirely inside the
+directly. The points $tau = 1$, $4$ and $16$ are $0.29$, $0.26$ and $0.46$ times the repeatability:
+they *pass* the shot-noise test ($1.73$, $1.54$ and $2.72$ times) while sitting entirely inside the
 spread of the device's own repeats. Reporting only the shot-noise null would have presented these
 three points as the channel already appearing.
-The first undeniable signal is $tau = 64$ (about $1.6$ microseconds): $2.21$ times the
-repeatability and $9.36$ times the shot noise, reaching $27$ times the repeatability by
+The first undeniable signal is $tau = 64$ (about $1.3$ microseconds): $1.55$ times the
+repeatability and $9.27$ times the shot noise, reaching $16$ times the repeatability by
 $tau = 1024$.
 
-Beyond $tau = 4096$ the curve saturates: $max abs(Delta P)$ settles at $0.81$ and $P(00000)$ at
-$0.823$. That is exactly where $T_1$ relaxation drives the state to $|0 dots 0 angle$, and the
-$0.82$ rather than $1$ is the readout assignment-fidelity limit.
-The saturation point also fixes the $T_1$ scale: it falls between $1024$ and $4096$ cycles, i.e.
-tens of microseconds, consistent with a typical superconducting transmon.
+The shape of the curve is the shape of $T_1$ relaxation: $max abs(Delta P)$ rises from $0.644$ at
+$tau = 4096$ through $0.735$ at $16384$ to $0.811$ at $65536$, while $P(00000)$ rises from
+$0.657$ through $0.748$ to $0.823$. The $0.823$ rather than $1$ is the readout assignment-fidelity
+ceiling, i.e. the state has fully relaxed to $|0 dots 0 angle$.
+The rise between $1024$ and $4096$ cycles fixes the $T_1$ scale at about $10^3$ cycles, i.e. tens
+of microseconds, consistent with a typical superconducting transmon.
 
 For the corollary in Section 3.6 this is a *direct* observation: the theorem assumes exact
 dephasing, whereas the hardware delivers dephasing *plus* relaxation, and the relaxation fully
