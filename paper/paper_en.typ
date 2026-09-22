@@ -85,12 +85,11 @@ A class of hybrid architectures has appeared in recent years: a classical networ
 extracts features and a quantum circuit then acts as the decision layer @wang2026.
 Such work reports improvements in both accuracy and calibration, but it shares one
 structural feature---*the quantum layer is never treated as a controlled variable
-in an ablation*. (An *ablation*, in the machine-learning sense, is the practice of
-deleting one component of a model so that its contribution can be measured in
-isolation.)
+in an ablation*. (An *ablation* removes one component of a model so that its
+contribution can be measured on its own.)
 Take @wang2026: its state-of-the-art design is a "single-variable" comparison in
-which all models share the same preprocessing and classification head (the final
-network layer that turns the extracted features into class scores), and only the
+which all models share the same preprocessing and classification head (the final layer that
+turns features into class scores), and only the
 first convolutional layer is changed from deterministic to Bayesian.
 The quantum layer is an identical constant across both arms.
 
@@ -120,9 +119,9 @@ quantumness itself is necessary*. This work supplies that missing step.
     ($n >= 3$ is a hard requirement: eight class probabilities need at least a
     3-qubit projective readout.)
   + We reproduce the 4-qubit quantum layer of @wang2026 with CUDA-Q (a
-    quantum-circuit simulation framework) and cross-validate it---that is, check it
-    against a second implementation written independently in NumPy (the standard
-    numerical library for Python)---
+    quantum-circuit simulator) and cross-validate it (check it against a second
+    implementation written independently in NumPy, the standard Python numerical
+    library)
     ($4.16 times 10^(-17)$); this item is positioned as *reproducibility evidence*,
     not as a methodological contribution. The two experiments of Section 6 are
     endorsed separately on the reference track: the largest capacity-scan circuit
@@ -144,9 +143,8 @@ quantumness itself is necessary*. This work supplies that missing step.
 The three-stage skeleton of @wang2026 is "classical feature extraction -> quantum
 state evolution -> classical decision". Its quantum layer uses a 4-qubit,
 depth-2 parameterised quantum circuit (PQC), and the readout measures the
-Pauli-$Z$ expectation values of all qubits into a vector that a linear layer---a
-single matrix multiplication plus a bias, the simplest learnable
-transformation---then classifies. Its gains come explicitly from the *classical Bayesian front end*:
+Pauli-$Z$ expectation values of all qubits into a vector that a linear layer (one
+matrix multiplication plus a bias) then classifies. Its gains come explicitly from the *classical Bayesian front end*:
 MNIST (a handwritten-digit image dataset) $+2.32$ and Fashion-MNIST (a clothing-image
 dataset) $+5.61$ percentage points, with the quantum layer held fixed.
 
@@ -154,8 +152,8 @@ dataset) $+5.61$ percentage points, with the quantum layer held fixed.
 
 @wada2025 reports two related phenomena in the study of *distillation* for static
 word embeddings. (Distillation trains a small "student" model to imitate a larger
-"teacher" model; an *embedding* represents a piece of text as a fixed-length vector
-of real numbers.) First, when the student dimension is reduced to $d = 64$,
+"teacher" one; an *embedding* turns text into a fixed-length vector of real numbers.)
+First, when the student dimension is reduced to $d = 64$,
 knowledge distillation actually degrades performance ($63.8 -> 52.5$). Second,
 switching to a stronger teacher (GTE-large, a general-purpose text-embedding model) makes the student worse
 ($62.9$ against $63.8$ for GTE-base), which the authors attribute to an excessive
@@ -662,10 +660,9 @@ diagrams (plots of claimed confidence against observed accuracy), and an uncerta
 decomposition into predictive entropy and mutual information.
 
 #block(inset: (x: 1em), fill: rgb("#fff4e5"), radius: 2pt)[
-  *The defence point for a fair comparison*: temperature scaling---dividing the
-  model's output scores by a single fitted constant, which softens or sharpens the
-  predicted distribution---does not change the highest-scoring label, so it is a
-  means of improving calibration at zero cost in accuracy.
+  *The defence point for a fair comparison*: temperature scaling (dividing the
+  output scores by a single fitted constant) does not change the highest-scoring
+  label, so it improves calibration at zero cost in accuracy.
   Any calibration advantage of the quantum layer *must beat the temperature-scaled
   baseline*, otherwise the conclusion does not hold.
 ]
@@ -745,9 +742,9 @@ The four arms are trained under *the same model, the same data and the same numb
 trainable parameters* ($20$ angles) for the same number of steps ($800$), with each arm
 repeated across $5$ seeds; the only difference is the inserted channel and its position.
 The dephasing and depolarising arms have their *mean purity* matched (purity is
-$op("Tr")(rho^2)$: it equals $1$ for a pure state and decreases as the state becomes
-mixed; target purity $0.0742$; depolarising rate $p = 0.5657$, agreeing with the
-closed-form solution to $10^(-15)$).
+$op("Tr")(rho^2)$, equal to $1$ for a pure state; target purity $0.0742$;
+depolarising rate $p = 0.5657$, agreeing with the closed-form solution to
+$10^(-15)$).
 
 #figure(table(
   columns: (auto, auto, auto, auto, auto, auto, auto),
@@ -1025,6 +1022,33 @@ The real-hardware experiments were carried out on the *Tuna-17* superconducting
 processor of *Quantum Inspire*, the quantum computing platform operated by
 *QuTech* (Delft University of Technology and TNO); we thank QuTech for providing
 free access to quantum hardware.
+
+= Author contributions
+
+*Xin Yang* designed and implemented the quantum--classical pipeline, wrote the
+CUDA-Q and NumPy circuit implementations and the cross-validation between them,
+ran the capacity scan and the calibration ablation, and developed and ran the
+hardware submission and analysis code that produced the measurements on Tuna-17.
+*Poyuan Chung* developed the theoretical analysis of Section 3, including the
+precise monomial-matrix condition and the correction it forced, and wrote and
+verified the Lean 4 formalisation in `formal/Dephasing.lean`.
+*Yuan-Liang Zhong* supervised the work and reviewed the manuscript. All authors
+discussed the results and approved the final manuscript.
+
+= Code and data availability
+
+Everything needed to reproduce this work is available at
+
+https://github.com/snow-The/qbn-capacity-calibration
+
+The repository holds the
+Lean 4 formalisation of Section 3.8 together with the numerical verification
+scripts of that section, the CUDA-Q and NumPy circuit implementations and the
+cross-validation of Section 4.4, the capacity-scan and calibration-ablation
+pipelines, the hardware submission and analysis tools of Sections 6.3 and 6.4,
+and the raw measurement counts behind both hardware sections, including every
+individual measurement result file. The arXiv source package accompanies this
+preprint.
 
 = References
 

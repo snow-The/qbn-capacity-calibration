@@ -1,0 +1,92 @@
+=== w14_lab1_dephasing.py bug 調査記錄（誠實版）===
+
+日期：2026-09-16
+平台：WSL2 Ubuntu 24.04（所有診斷都在此執行）
+
+## 症狀
+
+python dev/labs/w14_lab1_dephasing.py
+  → ValueError: matmul: Input operand 1 does not have enough dimensions
+    (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+只在 build_rho("nodes") 路徑出現；None / "encode" / "final" 三個路徑都正常。
+
+## 已修（兩處，都是真 bug）
+
+同一個錯誤模式的**兩次重複**：用容易退化的起始值做 kron 累積。
+
+1. `_embed_single`（L60 附近）
+   錯誤：`out = np.array(1.0 + 0j)`          → shape ()
+   修正：`out = np.eye(1, dtype=complex)`    → shape (1,1)
+
+2. `kron_all`（巢狀在 `_cx_matrix` 內部，約 L110）
+   錯誤：`out = np.array([[1.0 + 0j]])`      → 在 dtype 提升路徑下退化
+   修正：`out = np.eye(1, dtype=complex)`
+
+實測佐證：
+  np.array(1.0+0j).shape              = ()
+  np.kron(np.array(1.0+0j), eye(2)).shape  = (2,)   ← 塌陷
+  np.eye(1, dtype=complex).shape      = (1, 1)
+  np.kron(np.eye(1,dtype=complex), eye(2)).shape = (2, 2)   ← 正確
+
+修完這兩處後，腳本的進度由【3】推進到【4】（先前在第 3 節就崩），
+證明修正有效，但**仍未完全解決**。
+
+## 未解決：第三個來源尚未定位
+
+診斷證據（在失敗影格印出區域變數）：
+  proj_sum  shape=()       dtype=object
+  out       shape=(32,32)  dtype=object
+  p         shape=(32,32)  dtype=complex128   ← p 本身是對的
+  rho       （未列出，因為它已被覆寫）
+
+`proj_sum = np.zeros_like(rho)` 是 `()` 且 `object`
+→ 傳入的 `rho` 是 **0 維 object 純量**。
+
+但 `build_rho("nodes")` 的邏輯理應讓 `rho` 保持 None 直到第 326 行才建立：
+  L306  if insert_at == "encode":   → False（nodes）
+  L309      rho = None
+  L312  for layer in range(2):
+  L315      if rho is None:  psi = gate @ psi   ← 只更新 psi
+  L325  if insert_at == "nodes":
+  L326      rho = dephase(rho, range(n))        ← 此時 rho 應為 None
+
+**手動逐步重現同一段邏輯時，每個 rho 都是正確的 (32,32)。**
+實際執行卻在 L326 拿到 0 維值。兩者差異來源未釐清。
+
+## 我的調查失誤（記錄下來避免重蹈）
+
+1. **在 Windows 上執行 `dev/verify_all.py`**，得出「12/18 通過」的錯誤結論。
+   該檔 docstring 第一行已寫明「用法（WSL 內，因為 cudaq 只在 WSL 有）」。
+   正確結果是 **WSL 內 17/18**。
+   → 教訓：專案所有 Python 執行一律在 WSL2 內，不要混用平台。
+
+2. **用 `grep '^def '` 找函式定義**，因此漏掉巢狀在 `_cx_matrix` 內部的
+   `kron_all`。我一度以為該函式不存在（KeyError），浪費一輪。
+   → 教訓：找定義要用不錨定行首的模式（`def `），並注意縮排。
+
+3. **寫了一支 monkey-patch 追蹤腳本，但它本身有 bug**
+   （引用未定義的 `epsilon_trace`），且我未先驗證追蹤工具就開始用它推理。
+   → 教訓：診斷工具必須先自我驗證，否則會產生假證據。
+
+4. **在同一個 bug 上連續嘗試多輪而未停損。**
+   應該在第 2 輪失敗後就直接加 assert 或改用 pdb，而不是繼續用推論追蹤。
+
+## 建議的下一步（尚未執行）
+
+選項 A（推薦）：**重寫 `build_rho` 為乾淨版本**
+  讓 rho 從函式開頭就以明確的 2D 矩陣起步，不要用 None 哨兵值交替更新
+  psi / rho。這樣可以結構性地排除這類 bug，也比逐一 hunt 剩餘來源快。
+
+選項 B：在 `dephase()` 進入點加 `assert rho.ndim == 2, f"{rho.ndim=}, {rho.dtype=}"`
+  然後重跑，讓 Python 直接指出第一個給出 0 維值的位置。
+
+選項 C：用 `pdb` 在 L326 設中斷點，檢查 rho 的實際值與來源。
+
+## 影響評估
+
+- 本檔是**教材用的示範腳本**，不是實驗管線的一部分。
+- 專案其他 **17/18 支腳本在 WSL 內全部通過**，包含所有 CUDA-Q 驗證、
+  交叉驗證（4.16e-17）、以及理論組的 134 項斷言。
+- 因此本 bug **不影響任何已報告的實驗結果**，只影響
+  「一鍵執行全部腳本」這個 ACM artifact badge 的宣稱。
