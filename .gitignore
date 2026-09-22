@@ -13,7 +13,10 @@ build/
 *.olean
 *.ilean
 
-# --- Typst / LaTeX 中間產物 ---
+# --- 建置輸出（皆可由 build*.bat 重建）---
+_verify/
+pages/
+pages_en*/
 *.aux
 *.log
 *.fls
@@ -25,9 +28,16 @@ build/
 *.bbl
 *.toc
 texput.log
-_verify/
-_probe_*.pdf
-_p*.png
+warn.txt
+warn_en.txt
+
+# --- 論文 PDF 不進版控：只保留 arXiv 投稿包 ---
+paper/*.pdf
+paper/*.png
+
+# --- 壓縮檔：只保留 arXiv 包 ---
+*.zip
+!paper/submission.zip
 
 # --- 憑證（絕對不能進版控）---
 .env
@@ -37,15 +47,9 @@ _p*.png
 config.json
 .quantuminspire/
 *credentials*
-*token*
 
 # --- 編輯器 / 系統 ---
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
-# --- 建置輸出（可由腳本重建）---
-submission/
-*.zip
-!results/*.json

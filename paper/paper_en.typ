@@ -193,43 +193,17 @@ indicator for every (arm, seed) pair.
 = Theoretical Background
 
 This section states, as provable propositions, why the dephasing ablation works and
-at which circuit positions it can work at all---using *only* tools covered by the two
-designated university textbooks: Griffiths and Schroeter (hereafter *G*) and
-Arfken, Weber and Harris (*A*). The required background is undergraduate quantum
-mechanics: density operators, projection operators, unitary transformations and
+at which circuit positions it can work at all. The required background is undergraduate
+quantum mechanics: density operators, projection operators, unitary transformations and
 commutators.
 
-#figure(
-  table(
-    columns: (auto, 1fr, 1fr),
-    table.header([*Tool used below*], [*Source*], [*Where it is used*]),
-    [Density operator, trace and purity], [G §12.3], [3.1 pure vs. mixed states],
-    [Measurement probability = diagonal, $P(i) = rho_(i i)$], [G §12.3.1 Eq. 12.16], [Most critical: proof of Theorem 2 in 3.4],
-    [Projection operators and completeness $sum_n P_n = I$], [G §3.6.2 Eq. 3.91, 3.93], [Definition in 3.2, Lemma 1 in 3.3],
-    [Evolution of the density operator], [G §12.3.2 Eq. 12.26], [3.1 why the word "channel" is needed],
-    [Pauli matrices and spin rotations], [G §4.4], [the $R_Y$ counterexample in 3.3],
-    [Commutator $[A, B] = A B - B A$], [A §5.3 Eq. 5.42], [Most critical: Theorem 1 in 3.3],
-    [Functions of operators and Baker--Hausdorff], [A §2.2 Eq. 2.85], [3.3 criterion for commutation],
-    [Euler identity $exp(i sigma_k theta)$], [A §2.2 Eq. 2.80], [3.3 closed form of $R_Y$],
-    [Unitary similarity transformation], [A §5.6 Eq. 5.76], [3.3 proof of Theorem 1],
-    [Simultaneous diagonalisation $arrow.l.r$ commutation], [A §6.4], [3.3 equivalent statement],
-    [Sequential measurements: why order matters], [GS Problem 3.33], [3.5 minimal counterexample],
-  ),
-  caption: [Textbook map for the theoretical section. G = Griffiths 3e, A = Arfken 7e, GS = Griffiths solutions manual. Every row is original content in those books and can be looked up directly.],
-)
-
-*The one thing the textbooks do not contain, and why that is not an obstacle.*
-The two *names* "quantum channel" and "Kraus operator" do not appear in G or A:
-a verbatim search for `Kraus`, `channel`, `quantum operation`, `superoperator`,
-`POVM` and `completely positive` returns *zero* hits in both books.
-But what this section actually *uses* is the single operation "knock out the
-off-diagonal entries of a density matrix with a set of projection operators",
-and projection operators with completeness are original content in G §3.6.2
-(Eq. 3.91, 3.93). In other words, Section 3.1 introduces the channel vocabulary only
-so that the presentation matches the modern literature; *every deduction below can be
-restated entirely in the language of G and A*. If the general theory is questioned,
-the external reference is Nielsen and Chuang @nielsen2010, and nothing else in this
-section depends on it.
+Dephasing is *not* unitary, and describing it needs the language of quantum channels;
+Section 3.1 builds that language from scratch. What this section actually *uses*,
+however, is the single operation of knocking out the off-diagonal entries of a density
+matrix with a set of projection operators, and projection operators with completeness
+are standard undergraduate material. Every deduction from Section 3.3 onwards therefore
+needs nothing beyond that. Readers already familiar with channels can skip to 3.3;
+for the general theory see @nielsen2010.
 
 == Density operators and quantum channels
 
@@ -334,9 +308,16 @@ and $R_Z$: each is either a permutation or diagonal.
 *Counterexample ($R_Y$ does not commute).* By the Euler identity
 $exp(-i theta Y / 2) = I cos(theta / 2) - i Y sin(theta / 2)$,
 $ R_Y(theta) = mat(cos(theta / 2), -sin(theta / 2); sin(theta / 2), cos(theta / 2)) . $
-When $sin(theta / 2) != 0$ the first row contains *two* non-zero entries, violating
-the definition of a monomial matrix. Hence $R_Y$ does not commute with $cal(E)$; the
-same holds for $R_X$ and for the Hadamard gate $H$.
+When $sin(theta / 2) != 0$ *and* $cos(theta / 2) != 0$ the first row contains *two*
+non-zero entries, violating the definition of a monomial matrix, so $R_Y$ does not
+commute with $cal(E)$; the same holds for $R_X$ and for the Hadamard gate $H$.
+
+*A correction forced by the formalisation.* This section originally stated only the
+$sin(theta / 2) != 0$ condition. But at $theta = pi$ we have $R_Y = mat(0, -1; 1, 0)$,
+which *is* monomial (a permutation matrix times $-1$) and does commute with dephasing.
+The precise statement is that $R_Y(theta)$ is monomial *if and only if* $theta in pi bb(Z)$.
+The Lean formalisation (`not_isMonomial_RY` in `formal/Dephasing.lean`) uses exactly the
+two-condition form.
 
 *A necessary sharpening.* Earlier project documents state that dephasing must be
 inserted "before a layer containing $R_Y / R_Z$". The precise statement is that

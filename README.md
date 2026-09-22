@@ -82,7 +82,9 @@ course textbooks alone.
 ## Repository layout
 
 ```
-paper/     Paper source (Typst is the single source of truth; LaTeX is generated)
+paper/     Paper source (Typst is the single source of truth; LaTeX is generated).
+           Includes submission.zip, the ready-to-upload arXiv package.
+           Compiled PDFs are deliberately not tracked -- rebuild them with build_all.bat.
 theory/    Theoretical write-ups and their numerical verification scripts
 formal/    Lean 4 formalisation of the core theorems
 hardware/  Real-hardware protocol (Quantum Inspire / Tuna-17) and diagnostics
@@ -142,11 +144,16 @@ We consider documenting this worth as much as the positive results: it cost us a
 前端去相位把模型壓成無資訊的均勻預測（且它的 ECE 反而更低，證明單一校準指標不足以當證據）。
 我們不主張任何量子優勢——5 個 qubit 的狀態向量只有 512 位元組。
 
-理論部分以兩本指定大學用書（Griffiths 3e、Arfken 7e）的工具寫成，並經 **Lean 4 形式化驗證**
-（無 `sorry`，僅依賴三個標準公理）。
+理論部分只用大學量子力學的工具寫成，並經 **Lean 4 形式化驗證**（無 `sorry`，
+僅依賴三個標準公理）。形式化過程中還逼出了一處修正：$R_Y(\pi)$ 其實**是**么模仿塊矩陣，
+因此「$R_Y$ 不交換」的精確條件需要 $\sin(\theta/2)$ 與 $\cos(\theta/2)$ 都非零——
+論文原本只寫了一個條件，已更正。
 
 ## License
 
-See `LICENSE`. **Text and code are intended to carry different licences**; the file is a
-placeholder pending a decision and the repository is not ready for public release until it is
-replaced.
+The two kinds of content carry different licences (see `LICENSE` for the full texts):
+
+- **Paper text and documentation** (`paper/*.typ`, `theory/`, `docs/`, this README):
+  [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0).
+- **Code** (`ml/`, `hardware/`, `c1/`, `formal/`, `paper/make_*.py`): MIT.
+

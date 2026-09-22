@@ -16,7 +16,7 @@ authors:
   - family-names: "Zhong"
     given-names: "Yuan-Liang"
 year: 2026
-license: "NOASSERTION"   # 待決定：論文文本建議 CC-BY-4.0，程式碼建議 MIT 或 Apache-2.0
+license: "CC-BY-4.0"   # 論文文本；程式碼為 MIT，見 LICENSE
 keywords:
   - quantum machine learning
   - quantum Bayesian networks
