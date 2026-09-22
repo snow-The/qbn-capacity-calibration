@@ -102,18 +102,18 @@ quantumness itself is necessary*. This work supplies that missing step.
     @tucci2012 as the sole variable *within a single model* (no change of model,
     data or parameter count) to examine the marginal contribution of quantumness
     to calibration and capacity.
-    Within the scope of our search we found no prior work that uses this operator
-    as an ablation tool---the closest efforts either attribute behaviour
-    observationally via entanglement measures @nausheen2026, or introduce
-    depolarising noise as an external variable @ghosh2026.
+    The closest efforts either attribute behaviour observationally via entanglement
+    measures @nausheen2026, or introduce depolarising noise as an external variable
+    @ghosh2026; in both, the decision layer itself is held fixed across the
+    comparison.
   + We extend the *capacity cliff* scan to qubit counts $3$--$10$ $times$ circuit
     depths $1$--$8$. Prior work has established the $(Q, L)$ scaling protocol and
     reported saturation @vyskubov2026, and has observed non-monotonicity
     along a single axis (@le2025 for the qubit axis; @zhang2021suppression
     for the depth axis). What we add is the complete two-dimensional grid under a
-    *fixed readout rule*, *with calibration reported alongside accuracy*, and one
-    phenomenon that prior work has not reported: *test accuracy decreasing with
-    qubit count*---which holds for configurations in which capacity is genuinely
+    *fixed readout rule* and *with calibration reported alongside accuracy*: the
+    grid shows *test accuracy decreasing with qubit count*---which holds for
+    configurations in which capacity is genuinely
     used (the per-$n$ peak and the deepest slice are monotone from $n = 4$), while
     shallower slices are masked by under-optimisation.
     ($n >= 3$ is a hard requirement: eight class probabilities need at least a
@@ -730,11 +730,9 @@ than $6$ became non-monotonic (for example, at $L = 6$ the value $0.572$ for $n 
 exceeds $0.545$ for $n = 6$). The claim is therefore restricted to the peak and to the
 deepest slice.
 
-Within the scope of our search we found no prior work reporting this phenomenon:
-a conjunctive search over "quantum classifier", "qubit number" and "accuracy" returns
-zero hits. What prior work reports is the $(Q, L)$ scaling protocol and
-non-monotonicity along a single axis; what this work adds is the complete
-two-dimensional grid under a *fixed readout rule*, together with this downward trend.
+Prior work reports the $(Q, L)$ scaling protocol and non-monotonicity along a
+single axis; what this work adds is the complete two-dimensional grid under a
+*fixed readout rule*, together with this downward trend in qubit count.
 
 == Calibration ablation
 
@@ -989,6 +987,27 @@ experimental result of ours.
   a single average purity does not constrain any individual sample.
   Any ablation that claims "the two channels are equally classical" on the strength of
   one purity number must re-check that claim on the evaluation set.
+
+== Future work
+
+Two directions follow from this work. The first concerns training rather than
+architecture. Section 2.2 records that distillation degrades a student once the
+capacity gap to its teacher grows too large @wada2025; our capacity scan sees the
+same tension from the other side, where additional qubits make test accuracy worse
+and less stable. A quantum decision layer is therefore a natural student, and
+*zero-shot distillation*---transferring a teacher's behaviour without access to the
+teacher's training data---would let it be trained against a stronger classical
+model while leaving the ablation channel as the only free variable. Whether the
+capacity gap that hurts classical students also bounds a quantum one is, to us,
+the most direct open question this work raises.
+
+The second direction concerns measurement rather than architecture. Section 6.2
+shows that a degraded model's expected calibration error can *improve* while its
+negative log-likelihood and Brier score worsen, because a predictor that has
+collapsed towards the uniform distribution is trivially well calibrated. Any
+future comparison of calibration between quantum and classical decision layers
+should therefore report all three, or the comparison can be won by discarding
+information.
 
 = Conclusion
 
