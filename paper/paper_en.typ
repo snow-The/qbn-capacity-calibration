@@ -1140,6 +1140,7 @@ numerical results come from code the authors ran and checked, all claims were ve
 against the primary data or the cited sources, and every bibliographic entry was
 checked against the original publication. The authors take full responsibility for the
 content of this work.
+
 = Code and data availability
 
 Everything needed to reproduce this work is available at
