@@ -508,21 +508,34 @@ breaks the corollary "terminal dephasing is bit-identical"; that breakdown is it
 measurable hardware property rather than a failure of the theorems above (see the
 caveat at the end of Section 3.6).
 
-*Formal verification (Lean 4).* The table above is a numerical reconciliation;
-Theorems 1 and 2 and the $op("CX")$ corollary are additionally checked by a
-*machine proof assistant*. `formal/Dephasing.lean` compiles under Lean 4.34.0 with
-mathlib and contains eleven proved statements, with *no use of `sorry`*---no step in
-any of the proofs is skipped or assumed. Six of the eleven are covered by an audit
-with `#print axioms`, which shows that all six depend only on the three standard
-axioms `propext`, `Classical.choice` and `Quot.sound`: the three results just named,
-plus `isMonomial_diagonal`, `not_isMonomial_RY` and `not_isMonomial_RY_pi_div_four`.
-Taken together, the eleven statements cover the definition of the dephasing channel,
-the definition of a monomial matrix, the re-indexing lemmas for multiplication on
-either side, Theorem 1 itself, the permutation-matrix corollary, and Theorem 2. The
-two `not_isMonomial_RY` results formalise the negative half of Section 3.3: the
-formalisation proves that $R_Y(theta)$ is *not* monomial at generic angles, in exactly
-the two-condition form $sin(theta / 2) != 0$ and $cos(theta / 2) != 0$ used in the
-text, and it proves the concrete case $theta = pi slash 4$ of Section 3.5 separately.
+*Machine-checked proof of the theorems (Lean 4).* The table above reconciles the
+propositions with the simulator numerically. Because the results of this section are
+finite-dimensional matrix identities, a second and stronger check is available: they
+can be handed to a *proof assistant*, a program that accepts a mathematical statement
+only once every logical step has been supplied and checked mechanically, leaving no
+room for a step that is merely plausible. We used Lean 4. Three facts suffice to read
+the result. (i) `formal/Dephasing.lean` compiles under Lean 4.34.0 with mathlib, the
+standard mathematics library, and contains eleven proved statements. (ii) Lean's
+keyword `sorry` marks a step admitted without proof; the file contains none, so no
+step is skipped or assumed. (iii) Lean can print, for any proved statement, the
+complete list of foundational assumptions its proof rests on (the `#print axioms`
+command). For each of the six statements we audited, that list is exactly `propext`,
+`Classical.choice` and `Quot.sound`---the three axioms on which ordinary mathematics
+already rests---and nothing else: no extra assumption, no borrowed lemma and no
+hidden hypothesis entered the argument.
+
+What is checked is the mathematical content of this section, not a numerical shadow
+of it. The file fixes the dephasing channel and the monomial matrices as definitions,
+proves the re-indexing lemmas for multiplication on either side, and derives Theorem 1,
+its permutation-matrix corollary (the CX case) and Theorem 2. The six audited
+statements are those three results together with `isMonomial_diagonal`,
+`not_isMonomial_RY` and `not_isMonomial_RY_pi_div_four`. The last two are the negative
+half of Section 3.3: the formalisation proves that $R_Y(theta)$ is *not* monomial at
+generic angles, in exactly the two-condition form $sin(theta / 2) != 0$ and
+$cos(theta / 2) != 0$ used in the text, and proves the concrete case
+$theta = pi slash 4$ of Section 3.5 separately. The positive theorems and the
+counterexample that delimits them are therefore both machine-checked, and
+`formal/Dephasing.lean` is commented so that it can be read alongside this section.
 
 = Method
 
