@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-ML = Path("/mnt/c/Users/qq134/source/repos/QBN/projects/qbn-capacity-calibration/ml")
+ML = Path(__file__).resolve().parents[1] / "projects" / "qbn-capacity-calibration" / "ml"
 sys.path.insert(0, str(ML))
 import s08_pca_dim_ablation as s08  # noqa: E402
 

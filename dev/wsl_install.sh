@@ -2,7 +2,7 @@
 # WSL 內的環境安裝與版本確認。用腳本檔執行以避免 PowerShell 的引號/PATH 問題。
 #
 # 用法（在 Windows 端）：
-#   wsl -d QBN -u root -- bash /mnt/c/Users/qq134/source/repos/QBN/dev/wsl_install.sh
+#   wsl -d QBN -u root -- bash <repo-root>/dev/wsl_install.sh
 set -e
 
 export PATH="/root/.local/bin:/usr/local/bin:/usr/bin:/bin"

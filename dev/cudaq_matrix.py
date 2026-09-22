@@ -11,7 +11,7 @@
   3. **每一項都印出「問題 / 實測結果 / 結論」**，可直接貼進教科書。
 
 執行（WSL 內，因為 cudaq 只在 WSL 有）：
-    cd /mnt/c/Users/qq134/source/repos/QBN
+    cd <repo-root>
     /root/qbn-wsl/.venv/bin/python dev/cudaq_matrix.py          # 完整報告
     /root/qbn-wsl/.venv/bin/python dev/cudaq_matrix.py --ci     # 只回退出碼（給 CI 用）
 """

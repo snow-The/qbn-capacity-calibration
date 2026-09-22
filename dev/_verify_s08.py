@@ -12,7 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path("/mnt/c/Users/qq134/source/repos/QBN")
+ROOT = Path(__file__).resolve().parents[1]
 ML = ROOT / "projects/qbn-capacity-calibration/ml"
 sys.path.insert(0, str(ML))
 sys.path.insert(0, str(ROOT / "dev"))

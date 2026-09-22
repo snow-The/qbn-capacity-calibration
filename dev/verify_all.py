@@ -1,7 +1,7 @@
 """驗證 dev/ 底下所有腳本都能執行（清理後的迴歸測試）。
 
 用法（WSL 內，因為 cudaq 只在 WSL 有）：
-    cd /mnt/c/Users/qq134/source/repos/QBN
+    cd <repo-root>
     /root/qbn/.venv/bin/python dev/verify_all.py
 """
 
