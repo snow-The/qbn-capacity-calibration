@@ -1130,19 +1130,10 @@ NumPy circuit implementations and the cross-validation between them, the capacit
 scan and the calibration ablation, the hardware submission and analysis code that
 produced the measurements on Tuna-17, and the Lean 4 formalisation in
 `formal/Dephasing.lean`.
-*Poyuan Chung* developed the theoretical analysis of Section 3 on which the whole
-study rests: the quantum-channel formalism used throughout; the definition of
-monomial matrices and the proof of Lemma 1; the commutation theorem (Theorem 1)
-showing that computational-basis dephasing commutes with every monomial unitary,
-with its permutation-matrix corollary covering $op("CX")$, $op("CZ")$ and
-$op("SWAP")$; the converse analysis identifying $R_Y$, $R_X$ and $H$ as the gates
-that violate it, and the sharpening that $R_Z$ does not; the terminal-dephasing
-theorem (Theorem 2), which proves that dephasing inserted after the last
-non-monomial gate is invisible to computational-basis measurement; the minimal
-single-qubit counterexample showing that the order of rotation and dephasing
-decides whether information survives at all; the independent numerical
-verification of every proposition above; and the constraints this places on where
-the ablation must be inserted for the experiment to be informative.
+*Poyuan Chung* developed the theoretical analysis of Section 3: the commutation
+theorem and its converse, which determine exactly which gates hide computational-basis
+dephasing and which expose it; the terminal-dephasing theorem; the counterexample that
+fixes where the ablation must sit; and the numerical verification of each proposition.
 *Yuan-Liang Zhong* supervised the work and reviewed the manuscript. All authors
 discussed the results and approved the final manuscript.
 
