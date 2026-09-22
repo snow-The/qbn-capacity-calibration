@@ -802,8 +802,8 @@ and the differences of all four delayed arms sit in that same range*.
 channel being absent. The cQASM specification defines the `wait` parameter as a number whose
 unit is "the duration of a single-qubit gate on the backend, i.e. an execution cycle",
 and the Quantum Inspire knowledge base likewise says "idle the qubit ... for the given
-number of cycles". A superconducting transmon has a single-qubit gate time of about $25$ ns,
-so $1$--$4$ cycles cover only a small fraction of $T_2$ and the induced deviation is
+number of cycles". The Tuna backends have a native single-qubit gate time of $20$ ns and the `wait` argument
+is a count of those cycles, so $1$--$4$ cycles cover only a small fraction of $T_2$ and the induced deviation is
 correspondingly small; the noise floor at $8192$ shots is $0.00910$, which is $3.5$ times
 coarser than the $0.00260$ the next subsection reaches at $65536$ shots.
 
@@ -823,6 +823,14 @@ falls by a factor $1 slash sqrt(8) approx 0.35$.
 A gate-by-gate comparison of the compiled circuits confirms that the gate sequence is identical
 at every $tau$ ($42$ operations in all) and that the only difference is the value of `wait`;
 $tau = 0$ is gate-for-gate identical to arm A.
+
+*Why delays cannot be batched together.* The idle time of `wait` is paid *once per shot*:
+a circuit's execution time is proportional to $"shots" times tau$ ($tau = 65536$ already costs
+$1.31$ ms per shot, accumulating to hundreds of seconds over $65536$ shots), while the platform's
+`job_execution_time_limit` is a $300$-second budget for the *whole batch*.
+Binding large-$tau$ circuits together with small-$tau$ ones makes the entire batch time out and
+be cancelled --- which cost the first version of this study $13$ circuits. The correct unit is
+one circuit per batch.
 
 One artefact has to be ruled out first. The cQASM specification notes that `wait` *also*
 acts as a barrier, telling the scheduler that instructions may not be reordered across it,
