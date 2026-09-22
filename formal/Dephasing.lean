@@ -16,6 +16,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Diagonal
 import Mathlib.Basic.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 open Matrix
 open scoped Matrix
@@ -123,11 +124,71 @@ theorem measurement_invariance [Fintype n] {U V : Matrix n n ℂ} (hV : IsMonomi
   rw [← dephase_conj_monomial hV (U * ρ * Uᴴ)]
   simp
 
+/-! ### 引理 5.6：$R_Y$ 不是么模仿塊矩陣（除非 $\theta \in \pi\mathbb{Z}$） -/
+
+/-- $R_Y(\theta)$，用實數三角函數寫，再升到 $\mathbb{C}$。 -/
+noncomputable def RY (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![(Real.cos (θ / 2) : ℂ), -(Real.sin (θ / 2) : ℂ); (Real.sin (θ / 2) : ℂ), (Real.cos (θ / 2) : ℂ)]
+
+@[simp] theorem RY_apply_00 (θ : ℝ) : RY θ 0 0 = (Real.cos (θ / 2) : ℂ) := rfl
+@[simp] theorem RY_apply_01 (θ : ℝ) : RY θ 0 1 = -(Real.sin (θ / 2) : ℂ) := rfl
+@[simp] theorem RY_apply_10 (θ : ℝ) : RY θ 1 0 = (Real.sin (θ / 2) : ℂ) := rfl
+@[simp] theorem RY_apply_11 (θ : ℝ) : RY θ 1 1 = (Real.cos (θ / 2) : ℂ) := rfl
+
+/-- **引理 5.6（論文原句）**：若 $\sin(\theta/2) \neq 0$ *且* $\cos(\theta/2) \neq 0$，
+    則 $R_Y(\theta)$ 不是么模仿塊矩陣。
+
+    ⚠️ 兩個條件都必要：$\theta = \pi$ 時 $R_Y = \begin{pmatrix}0&-1\\1&0\end{pmatrix}$
+    其實*是*么模仿塊矩陣（它是置換矩陣乘 $-1$）。論文原本只寫了 $\sin$ 的條件，
+    這是形式化過程中發現的不精確。
+
+    證明：第一列的兩個元素都非零，違反「每列恰有一個非零元素」。 -/
+theorem not_isMonomial_RY {θ : ℝ}
+    (hsin : Real.sin (θ / 2) ≠ 0) (hcos : Real.cos (θ / 2) ≠ 0) :
+    ¬ IsMonomial (RY θ) := by
+  rintro ⟨σ, d, h⟩
+  have h00 : (RY θ) (0 : Fin 2) (0 : Fin 2) ≠ 0 := by
+    rw [RY_apply_00]
+    exact_mod_cast hcos
+  have h01 : (RY θ) (0 : Fin 2) (1 : Fin 2) ≠ 0 := by
+    rw [RY_apply_01]
+    exact neg_ne_zero.mpr (by exact_mod_cast hsin)
+  -- 第一列的第 0 行有非零元素 ⇒ σ 0 = 0
+  have e0 : σ (0 : Fin 2) = 0 := by
+    by_contra hne
+    have hz : (RY θ) (0 : Fin 2) (0 : Fin 2) = 0 := by
+      rw [h 0 0]
+      simp [hne]
+    exact h00 hz
+  -- 第一列的第 1 行也有非零元素 ⇒ σ 0 = 1
+  have e1 : σ (0 : Fin 2) = 1 := by
+    by_contra hne
+    have hz : (RY θ) (0 : Fin 2) (1 : Fin 2) = 0 := by
+      rw [h 0 1]
+      simp [hne]
+    exact h01 hz
+  -- 兩者矛盾
+  rw [e0] at e1
+  exact absurd e1 (by decide)
+
+/-- 具體反例（論文 §3.5 用的 $\theta = \pi/4$）：$R_Y(\pi/4)$ 不是么模仿塊矩陣。 -/
+theorem not_isMonomial_RY_pi_div_four : ¬ IsMonomial (RY (Real.pi / 4)) := by
+  apply not_isMonomial_RY
+  · apply ne_of_gt
+    apply Real.sin_pos_of_pos_of_lt_pi
+    · linarith [Real.pi_pos]
+    · linarith [Real.pi_pos]
+  · apply ne_of_gt
+    apply Real.cos_pos_of_mem_Ioo
+    constructor <;> linarith [Real.pi_pos]
+
 /-! ### 公理檢查 —— 確認沒有任何 sorry -/
 
 #print axioms Qbn.dephase_conj_monomial
 #print axioms Qbn.dephase_conj_permMatrix
 #print axioms Qbn.measurement_invariance
 #print axioms Qbn.isMonomial_diagonal
+#print axioms Qbn.not_isMonomial_RY
+#print axioms Qbn.not_isMonomial_RY_pi_div_four
 
 end Qbn
