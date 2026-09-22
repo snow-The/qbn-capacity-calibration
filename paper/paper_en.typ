@@ -963,8 +963,14 @@ $tau = 4096$ through $0.735$ at $16384$ to $0.811$ at $65536$, while $P(00000)$ 
 $0.657$ through $0.748$ to $0.823$. The $0.823$ rather than $1$ is the readout *assignment-fidelity* ceiling
 (the probability that a qubit prepared in $ket(0)$ is in fact read out as $0$),
 i.e. the state has fully relaxed to $|0 dots 0 angle$.
-The rise between $1024$ and $4096$ cycles fixes the $T_1$ scale at about $10^3$ cycles, i.e. tens
-of microseconds, consistent with a typical superconducting transmon.
+A least-squares fit of $P(00000)$ over the nine delay points to $A - B exp(-tau slash T_1)$
+gives $T_1 = 2.4 times 10^3$ cycles, that is about $48$ microseconds (bootstrap $95%$ interval
+$2.2$--$2.6 times 10^3$ cycles, from the per-sample scatter; the fit and its inputs are in
+`hardware/runs/tau`, `hardware/runs/tau2` and `hardware/tau_analyze.py`).
+The same fit to $max abs(Delta P)$ gives $2.4 times 10^3$ cycles, so the two observables agree---
+a check on the model rather than a coincidence---and this is consistent with a typical
+superconducting transmon. The fit is not exact at the longest delay: its asymptote is $0.79$
+while the $tau = 65536$ point measures $0.82$, and that point still rests on a single sample.
 
 For the corollary in Section 3.6 this is a *direct* observation: the theorem assumes exact
 dephasing, whereas the hardware delivers dephasing *plus* relaxation, and the relaxation fully
