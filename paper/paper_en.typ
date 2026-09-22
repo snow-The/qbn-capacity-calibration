@@ -643,12 +643,15 @@ double-precision machine epsilon); the other three are all of order $10^(-17)$.
 
 #figure(table(
   columns: (auto, 1fr, 1fr),
-  [*ID*], [*Question*], [*Pre-registered decision rule*],
+  [*ID*], [*Question*], [*Decision rule*],
   [RQ1 (research question 1)], [As the trainable capacity of the quantum circuit grows, does performance rise monotonically or is there a breakdown point?],
         [If performance is non-monotonic in capacity and the peak location depends on circuit depth, then H1 is supported.],
   [RQ2 (research question 2)], [By how much does dephasing (classicalisation) degrade calibration quality?],
         [If the lower bound of the 95\% confidence interval for the increase in ECE exceeds $0$, and exceeds the residual error of temperature scaling, then H2 is supported.],
-), caption: [Research questions and the decision rules fixed before the runs. Stating them in advance is what makes a negative outcome a result rather than a reinterpretation.])
+), caption: [Research questions and the decision rule applied to each. The rules are
+  recorded in this project's version history; for the hardware experiments of
+  Section 6 they were fixed before those runs began. Fixing a rule in advance is
+  what turns a negative outcome into a result rather than a reinterpretation.])
 
 == Evaluation metrics
 
