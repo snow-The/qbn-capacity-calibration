@@ -171,13 +171,32 @@ def paren_block(text: str, marker: str) -> str:
     raise SystemExit("括號沒有配對：" + marker)
 
 
+def fix_subscript_parens(tex: str) -> str:
+    """pandoc 的 Typst reader 在 `_` 與 `(` 之間沒有空白時，會把括號吸進下標：
+
+        $R_Y(theta)$   ->  \(R_{Y(\theta)}\)    （錯）
+        $R_Y (theta)$  ->  \(R_{Y}(\theta)\)    （對）
+
+    實測 pandoc 3.7.0.2（筆電）與 3.9.0.2（本機）行為一致；Typst 本身的渲染是
+    正確的，只有 -t latex 這一步出錯。這裡把 \(_{X(...)}\) 還原成 \(_{X}(...)\)。
+    只處理單一字母下標、且括號內不含大括號或括號的情形；若有殘留就 SystemExit
+    失敗（fail-closed），絕不靜默產出錯誤的數學式。
+    """
+    out = re.sub(r"_\{([A-Za-z])\(([^{}()]*)\)\}",
+                 lambda m: "_{" + m.group(1) + "}(" + m.group(2) + ")",
+                 tex)
+    left = re.findall(r"_\{[A-Za-z]\(", out)
+    if left:
+        raise SystemExit("fix_subscript_parens：仍有未還原的下標 " + repr(left[:5]))
+    return out
+
 def to_latex(typst_src: str) -> str:
     proc = subprocess.run(["pandoc", "-f", "typst", "-t", "latex"],
                           input=typst_src, capture_output=True, text=True,
                           encoding="utf-8")
     if proc.returncode != 0:
         raise SystemExit("pandoc 失敗：" + chr(10) + proc.stderr)
-    return proc.stdout
+    return fix_subscript_parens(proc.stdout)
 
 
 def fix_figures(tex: str) -> str:

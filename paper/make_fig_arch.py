@@ -109,7 +109,7 @@ def main() -> int:
     sg = 1.5
     sw = (sx1 - sx0 - 2 * sg) / 3.0
     subs = [
-        ["Angle encoding", r"$R_Y(\theta_i)=2\arcsin\sqrt{x_i}$"],
+        ["Angle encoding", r"$\theta_i=2\arcsin\sqrt{x_i}$"],
         ["Ring entangler", r"$CX$: $q_i \to q_{i+1}$"],
         ["Trainable block", r"$R_Y\!\cdot\! R_Z$, repeated $L$ times"],
     ]

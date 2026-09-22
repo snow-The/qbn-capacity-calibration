@@ -562,11 +562,16 @@ $[R_Y(phi), R_Z(lambda)]$ 可訓練層。其中可訓練層*含有 $R_Y$*，
 
 *形式化驗證（Lean 4）。* 上表是數值對帳；定理 1、定理 2 與 $op("CX")$ 推論
 另外經過*機器證明助理*的獨立檢查。`formal/Dephasing.lean` 在 Lean 4.34.0 與
-mathlib 下編譯通過，並經 `#print axioms` 稽核：三個定理合計只依賴 `propext`、
-`Classical.choice`、`Quot.sound` 三個標準公理，*沒有使用 `sorry`*——
-也就是說，證明裡沒有任何被跳過或被假設掉的步驟。
-形式化的範圍涵蓋：去相位通道的定義、么模仿塊矩陣的定義、兩側乘法的重新索引引理、
-定理 1 本身、置換矩陣推論，以及定理 2。
+mathlib 下編譯通過，共含十一個已證敘述，*完全沒有使用 `sorry`*——
+也就是說，沒有任何證明的步驟被跳過或被假設。其中六個經 `#print axioms` 稽核，
+六者合計只依賴 `propext`、`Classical.choice`、`Quot.sound` 三個標準公理：
+即上述三個結果，加上 `isMonomial_diagonal`、`not_isMonomial_RY` 與
+`not_isMonomial_RY_pi_div_four`。十一個敘述整體涵蓋：去相位通道的定義、
+么模仿塊矩陣的定義、兩側乘法的重新索引引理、定理 1 本身、置換矩陣推論，
+以及定理 2。兩個 `not_isMonomial_RY` 正是 3.3 節的反面那一半：形式化證明
+$R_Y(theta)$ 在一般角度下*不是*么模仿塊矩陣，用的正是文中
+$sin(theta / 2) != 0$ 與 $cos(theta / 2) != 0$ 的兩條件形式，
+並另外證明 3.5 節所用的具體情形 $theta = pi slash 4$。
 
 = 方法
 
@@ -579,7 +584,7 @@ mathlib 下編譯通過，並經 `#print axioms` 稽核：三個定理合計只�
   caption: [
     系統架構。古典前端（靜態嵌入 → 主成分分析 principal component analysis, PCA 降維）
     輸出 $k$ 維特徵，交給量子層：
-    角度編碼 $R_Y(theta_i) = 2 arcsin sqrt(x_i)$、環形 $op("CX")$ 糾纏、
+    角度編碼 $theta_i = 2 arcsin sqrt(x_i)$、環形 $op("CX")$ 糾纏、
     可訓練的 $R_Y times R_Z$ 區塊重複 $L$ 次；量測只取前 3 個 qubit
     （$2^3 = 8$ 個基底模式，與 $n$、$L$ 無關），再由古典讀出層映射到 8 個類別。
     左下角為交叉驗證協定；展開框標出去相位消融的插入位置——

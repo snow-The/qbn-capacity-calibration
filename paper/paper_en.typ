@@ -511,12 +511,18 @@ caveat at the end of Section 3.6).
 *Formal verification (Lean 4).* The table above is a numerical reconciliation;
 Theorems 1 and 2 and the $op("CX")$ corollary are additionally checked by a
 *machine proof assistant*. `formal/Dephasing.lean` compiles under Lean 4.34.0 with
-mathlib, and an audit with `#print axioms` shows that the three theorems together
-depend only on the three standard axioms `propext`, `Classical.choice` and
-`Quot.sound`---with *no use of `sorry`*, meaning that no step in the proofs is
-skipped or assumed. The formalisation covers the definition of the dephasing channel,
+mathlib and contains eleven proved statements, with *no use of `sorry`*---no step in
+any of the proofs is skipped or assumed. Six of the eleven are covered by an audit
+with `#print axioms`, which shows that all six depend only on the three standard
+axioms `propext`, `Classical.choice` and `Quot.sound`: the three results just named,
+plus `isMonomial_diagonal`, `not_isMonomial_RY` and `not_isMonomial_RY_pi_div_four`.
+Taken together, the eleven statements cover the definition of the dephasing channel,
 the definition of a monomial matrix, the re-indexing lemmas for multiplication on
-either side, Theorem 1 itself, the permutation-matrix corollary, and Theorem 2.
+either side, Theorem 1 itself, the permutation-matrix corollary, and Theorem 2. The
+two `not_isMonomial_RY` results formalise the negative half of Section 3.3: the
+formalisation proves that $R_Y(theta)$ is *not* monomial at generic angles, in exactly
+the two-condition form $sin(theta / 2) != 0$ and $cos(theta / 2) != 0$ used in the
+text, and it proves the concrete case $theta = pi slash 4$ of Section 3.5 separately.
 
 = Method
 
@@ -529,7 +535,7 @@ either side, Theorem 1 itself, the permutation-matrix corollary, and Theorem 2.
   caption: [
     System architecture. The classical front end (static embedding, then principal component analysis, PCA)
     emits a $k$-dimensional feature vector to the quantum layer: angle encoding
-    $R_Y(theta_i) = 2 arcsin sqrt(x_i)$, a ring $op("CX")$ entangler, and a trainable
+    $theta_i = 2 arcsin sqrt(x_i)$, a ring $op("CX")$ entangler, and a trainable
     $R_Y times R_Z$ block repeated $L$ times. Measurement reads only the first 3
     qubits ($2^3 = 8$ basis patterns, independent of $n$ and $L$), and a classical
     readout layer maps them to 8 classes. Lower left: the cross-validation
