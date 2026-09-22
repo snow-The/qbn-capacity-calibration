@@ -685,7 +685,7 @@ effect sizes and confidence intervals instead.
 
 We scan the $(n, L)$ two-dimensional grid under a *fixed readout rule*: qubit count
 $n$ from $3$ to $10$, circuit depth $L$ from $1$ to $8$, with each configuration
-repeated across $5$ seeds.
+repeated across $5$ seeds. @fig:cliff shows the whole grid.
 The readout always projects the basis patterns of the first $3$ qubits onto
 $8$ classes, independently of $n$ and $L$; increasing the qubit count therefore
 increases the *available input dimensionality and state space*, not the resolution
@@ -791,7 +791,7 @@ The $5$-qubit ring circuit of this study has *no* one-to-one mapping onto that t
 After routing, the compiled circuits of all five arms are *identical*
 ($op("CX") = 10$, $op("SWAP") = 2$, depth $18$, $42$ gates);
 the only difference between arms A and C is five `wait` instructions -- a clean controlled comparison.
-Each arm contributes $8$ samples, $40$ circuits in total, at $8192$ shots each.
+Each arm contributes $8$ samples, $40$ circuits in total, at $8192$ shots each; the four arms are listed in @fig:hw-ablation.
 The bit order is measured rather than assumed: applying an $X$ gate to $q_0$, $q_2$ and $q_4$
 returns `00001`, `00100` and `10000` respectively, so the platform's classical bit order
 is reversed into the $q_0$-leftmost convention used here.
@@ -852,7 +852,7 @@ Pushing the delay from $1$ execution cycle to $65536$ (about $1.6$ ms, spanning 
 $T_1$) yields a logarithmic dose-response curve covering five orders of magnitude.
 Each point uses the same batch of samples and the same circuit, changing only the `wait`
 parameter, at $65536$ shots per circuit -- eight times the previous subsection, so the noise
-falls by a factor $1 slash sqrt(8) approx 0.35$.
+falls by a factor $1 slash sqrt(8) approx 0.35$. @fig:tau-curve shows the resulting curve.
 A gate-by-gate comparison of the compiled circuits confirms that the gate sequence is identical
 at every $tau$ ($42$ operations in all) and that the only difference is the value of `wait`;
 $tau = 0$ is gate-for-gate identical to arm A.
