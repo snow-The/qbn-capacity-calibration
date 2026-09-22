@@ -671,6 +671,21 @@ double-precision machine epsilon); the other three are all of order $10^(-17)$.
 
 == Research questions and decision rules
 
+Two hypotheses are tested. Each is tied to one research question and to a decision rule
+fixed before the data were seen.
+
+*H1 (capacity).* Predictive performance is a non-monotonic function of the trainable
+capacity of the quantum layer: there is a breakdown point, and the location of that
+point depends on the circuit depth.
+
+*H2 (calibration).* Classicalising the quantum layer by dephasing *degrades* the
+calibration of the model, so that the expected calibration error rises relative to the
+coherent model.
+
+Stating a rule in advance is what turns a negative outcome into a result rather than a
+reinterpretation. The table below records the question and the rule for each; the
+verdicts are given in Section 6.
+
 #figure(table(
   columns: (auto, 1fr, 1fr),
   [*ID*], [*Question*], [*Decision rule*],
@@ -816,7 +831,9 @@ Three points are worth making:
   covers $0$, so the calibration question of RQ2 is not answered in the affirmative.
   The accuracy difference of the same pairing is $-0.0907$ ($plus.minus 0.0600$), whose
   interval *excludes* $0$: dephasing measurably degrades the accuracy of this model.
-  Hence *H2 does not hold*: dephasing did not improve calibration, it destroyed information.
+  Hence *H2 is not supported*: no degradation of calibration is established. It is the
+  accuracy interval, not the calibration one, that excludes zero: dephasing destroyed
+  information rather than reshaping the model's confidence.
 
 == Hardware verification
 
@@ -1108,13 +1125,23 @@ free access to quantum hardware.
 
 = Author contributions
 
-*Xin Yang* designed and implemented the quantum--classical pipeline, wrote the
-CUDA-Q and NumPy circuit implementations and the cross-validation between them,
-ran the capacity scan and the calibration ablation, and developed and ran the
-hardware submission and analysis code that produced the measurements on Tuna-17.
-*Poyuan Chung* developed the theoretical analysis of Section 3, including the
-precise monomial-matrix condition and the correction it forced, and wrote and
-verified the Lean 4 formalisation in `formal/Dephasing.lean`.
+*Xin Yang* designed the study and built the end-to-end pipeline: the CUDA-Q and
+NumPy circuit implementations and the cross-validation between them, the capacity
+scan and the calibration ablation, the hardware submission and analysis code that
+produced the measurements on Tuna-17, the numerical verification of the theory,
+and the Lean 4 formalisation in `formal/Dephasing.lean`.
+*Poyuan Chung* developed the theoretical analysis of Section 3 on which the whole
+study rests: the quantum-channel formalism used throughout; the definition of
+monomial matrices and the proof of Lemma 1; the commutation theorem (Theorem 1)
+showing that computational-basis dephasing commutes with every monomial unitary,
+with its permutation-matrix corollary covering $op("CX")$, $op("CZ")$ and
+$op("SWAP")$; the converse analysis identifying $R_Y$, $R_X$ and $H$ as the gates
+that violate it, and the sharpening that $R_Z$ does not; the terminal-dephasing
+theorem (Theorem 2), which proves that dephasing inserted after the last
+non-monomial gate is invisible to computational-basis measurement; the minimal
+single-qubit counterexample showing that the order of rotation and dephasing
+decides whether information survives at all; and the constraints this places on
+where the ablation must be inserted for the experiment to be informative.
 *Yuan-Liang Zhong* supervised the work and reviewed the manuscript. All authors
 discussed the results and approved the final manuscript.
 
