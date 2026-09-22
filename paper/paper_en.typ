@@ -83,9 +83,9 @@ this problem cannot be assessed by accuracy alone.
 
 A class of hybrid architectures has appeared in recent years: a classical network
 extracts features and a quantum circuit then acts as the decision layer @wang2026.
-Such work reports improvements in both accuracy and calibration, but it shares one
-structural feature---*the quantum layer is never treated as a controlled variable
-in an ablation*. (An *ablation* removes one component of a model so that its
+Such work reports improvements in both accuracy and calibration, but the studies
+discussed here share one structural feature: *the quantum layer is held fixed
+across the comparison*. (An *ablation* removes one component of a model so that its
 contribution can be measured on its own.)
 Take @wang2026: its state-of-the-art design is a "single-variable" comparison in
 which all models share the same preprocessing and classification head (the final layer that
@@ -202,8 +202,8 @@ ECE of variational classifiers, finds that ECE does not rise monotonically with
 noise, and warns that a less expressive ansatz may look well calibrated merely
 because it has collapsed to a degenerate solution.
 
-The shared gap is that quantumness itself has never been the sole variable *within
-a single model*. This study fills that position with the classicalising operator of
+In each of the studies above, quantumness is not varied on its own *within a single
+model*. This study fills that position with the classicalising operator of
 @tucci2012. Taking up the warning of @ghosh2026, we record a collapse
 indicator for every (arm, seed) pair.
 
