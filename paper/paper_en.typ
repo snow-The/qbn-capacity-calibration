@@ -51,7 +51,7 @@
     to calibration; and (iii) a *hardware verification* on QuTech's Tuna-17
     superconducting processor, sweeping the delay of end-of-circuit dephasing across
     five orders of magnitude to locate the scale at which the channel actually appears
-    -- $1$--$4$ execution cycles (about $25$--$100$ ns) are far too short to realise it. Every quantum-circuit result is computed on both CUDA-Q and an
+    -- $1$--$4$ execution cycles (about $20$--$80$ ns) are far too short to realise it. Every quantum-circuit result is computed on both CUDA-Q and an
     independently implemented pure-NumPy state-vector simulator, then compared: the
     reproduction pipeline agrees to $4.16 times 10^(-17)$, the largest capacity-scan
     circuit (250 gates) to $3.47 times 10^(-18)$, and the ablation circuit to
@@ -595,7 +595,7 @@ exactly the map that projects a quantum node back onto a classical Bayesian netw
   Dephasing must be inserted *before a layer that contains $R_Y$ (or $R_X$, $H$)*
   for the effect to be observable (measured $0.0502$).
   $R_Z$ is a unitary block-diagonal matrix and *commutes* with dephasing, so
-  inserting it alongside leaves the measurement outcome unchanged (see Theorem 5.5)---
+  inserting it alongside leaves the measurement outcome unchanged (Theorem 1)---
   which is also why "the position of dephasing does not matter" turns from a trap
   into a *prediction guaranteed to be zero*.
 ]
@@ -775,9 +775,11 @@ Three points are worth making:
   uniform predictions: for the same arm the NLL degrades from $1.8510$ to $2.0558$ and
   the Brier score from $0.8104$ to $0.8690$.
   *ECE alone cannot be taken as evidence of improved calibration.*
-+ *The paired difference is not significant.* The ECE difference of $B - A$ is
-  $-0.0086$ with a $95%$ confidence interval of $plus.minus 0.0340$, which covers $0$;
-  the accuracy difference is $-0.0907$ ($plus.minus 0.0600$).
++ *The ECE difference is not significant; the accuracy drop is.* The ECE difference of
+  $B - A$ is $-0.0086$ with a $95%$ confidence interval of $plus.minus 0.0340$, which
+  covers $0$, so the calibration question of RQ2 is not answered in the affirmative.
+  The accuracy difference of the same pairing is $-0.0907$ ($plus.minus 0.0600$), whose
+  interval *excludes* $0$: dephasing measurably degrades the accuracy of this model.
   Hence *H2 does not hold*: dephasing did not improve calibration, it destroyed information.
 
 == Hardware verification
@@ -832,9 +834,9 @@ The null is thus $max abs(Delta P) = 0.00910 plus.minus 0.00109$ (95th percentil
 over-read is B4 at $1.29$. Deciding whether it is physics needs a control with no variable
 at all: the circuit of the $tau = 0$ block is gate-for-gate identical to arm A, and was only
 submitted about an hour later at a different shot count. Subtracting the two gives
-$max abs(Delta P) = 0.01624$ ($8$ samples, median $0.01683$), and *every one of the four
-delayed arms is less than half of that*: B1 is $0.48$ times it, B4 $0.55$, and C1 and C4
-$0.49$ each. In other words, *the difference this device produces when it simply runs the
+$max abs(Delta P) = 0.01624$ ($8$ samples, median $0.01683$); relative to that control the
+four delayed arms are $0.58$ (B1), $0.72$ (B4), $0.65$ (C1) and $0.59$ (C4) --- *every one of
+them is smaller than the control*. In other words, *the difference this device produces when it simply runs the
 identical circuit again is larger than the entire effect of the four delayed arms*.
 
 *Why $8192$ shots could not see it.* This is a question of statistical *power*, not of the
@@ -856,7 +858,7 @@ of magnitude -- and the signal appears.
 
 == Hardware delay dose response
 
-Pushing the delay from $1$ execution cycle to $65536$ (about $1.6$ ms, spanning both $T_2$ and
+Pushing the delay from $1$ execution cycle to $65536$ (about $1.3$ ms, spanning both $T_2$ and
 $T_1$) yields a logarithmic dose-response curve covering five orders of magnitude.
 Each point uses the same batch of samples and the same circuit, changing only the `wait`
 parameter, at $65536$ shots per circuit -- eight times the previous subsection, so the noise
@@ -940,7 +942,7 @@ dominates the measurement distribution at the $T_1$ scale.
 
 What is exponential is the *state space*; what is polynomial is the *number of knobs*.
 The density matrix of $5$ qubits has $32^2 - 1 = 1023$ real degrees of freedom, yet the
-circuit of this work has only $10$ trainable angles---the dimension of the reachable
+circuit of this work has only $10$ trainable angles per layer ($20$ in the two-layer circuit used here; the count is $2 n L$)---the dimension of the reachable
 subspace is far smaller than that of the ambient space.
 
 More fundamentally, *trainability* and *classical intractability* conflict with each

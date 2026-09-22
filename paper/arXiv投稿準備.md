@@ -74,7 +74,7 @@ arXiv 有 **Non-English submissions** 專頁，對非英文正文有規範。
 | C. 中英雙語 | 英文正文 + 中文附錄 | 折衷，工作量大 |
 
 **本專案的 Typst 模板已備有英文標題**（`Capacity Cliff and Calibration Ablation in a Hybrid Quantum--Classical Classifier`），
-但**摘要還是中文的**——這是必須先補的。
+摘要已改為英文（2026-09-23）。
 
 ---
 
@@ -186,7 +186,7 @@ Quantum 官方要求（arXiv 目前無強制，但這是學術誠信的趨勢）
 latexmk -xelatex -g -interaction=nonstopmode -halt-on-error paper.tex
 ```
 
-**結果（2026-09-22 實測）**：`rc=0`、**17 頁**、0 overfull、0 float-too-large、
+**結果（2026-09-23 重測）**：`rc=0`、**18 頁**、0 overfull、0 float-too-large、
 0 LaTeX error、0 undefined control sequence。
 
 > ⚠️ **不要用 `latexmk -pdf`（pdflatex）來做這個驗證。**
@@ -195,3 +195,20 @@ latexmk -xelatex -g -interaction=nonstopmode -halt-on-error paper.tex
 > 於是編譯會停在 `! LaTeX Error: File 'grfext.sty' not found.`。
 > **那是測試指令的問題，不是論文的問題**——arXiv 用完整 TeX Live，graphicx 的這條依賴本來就滿足。
 > 已用 xelatex 重驗通過。若哪天真的要用 pdflatex 驗，先讓 MiKTeX 連上網裝 grfext。
+
+---
+
+## arXiv 端的編譯引擎：**在 Review Files 步驗選 xelatex**
+
+arXiv 官方文件（info.arxiv.org/help/00README.html）說明：支援的 `compiler` 值包含 `xelatex`；
+但同時明說**不建議投稿前手動建立 `00README.json`**——
+arXiv 會在 **Review Files** 步驗自動生成它。
+
+**所以正確做法**：上傳後在 Review Files 步驗把編譯器選成 `xelatex`，並當場檢視編譯日誌。
+
+**為什麼不能赌 pdflatex**：本包載入 `microtype` + `[T1]{fontenc}`；2026-09-23 在筆電實測
+`pdflatex paper.tex` 直接失敗（`pdfTeX error (font expansion): auto expansion is only possible with scalable fonts`， rc=1，未生成 PDF）。
+arXiv 的 TeX Live 字型較完整、**可能**没事，但沒必要赌——選 xelatex 是零成本。
+
+附註：arXiv **不會**跑 bibtex，所以必須自己附 `.bbl`。本包已附 `paper.bbl`（18 筆），合規。
+
