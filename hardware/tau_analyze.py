@@ -11,7 +11,7 @@
 import collections, json, pathlib, sys
 import numpy as np
 
-ROOT = pathlib.Path("/home/b02/qi")
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 SHOTS, TRIALS, NBIN = 65536, 20000, 32
 
 

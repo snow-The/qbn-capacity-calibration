@@ -21,7 +21,7 @@ from qiskit import QuantumCircuit, transpile
 from qiskit_quantuminspire import cqasm
 from qiskit_quantuminspire.qi_provider import QIProvider
 
-ROOT = pathlib.Path("/home/b02/qi")
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "cqasm_tau2"
 TAUS = (0, 256, 1024, 4096, 16384, 65536)
 

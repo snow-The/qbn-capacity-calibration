@@ -9,7 +9,7 @@ import json
 import math
 import pathlib
 
-ROOT = pathlib.Path("/home/b02/qi")
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "figs/tau_dose.svg"
 
 W, H = 1000, 390
