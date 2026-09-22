@@ -206,17 +206,16 @@ latexmk -xelatex -g -interaction=nonstopmode -halt-on-error paper.tex
 
 ---
 
-## arXiv 端的編譯引擎：**在 Review Files 步驗選 xelatex**
+## arXiv 端的編譯引擎：**在 Review Files 步驟選 xelatex**
 
 arXiv 官方文件（info.arxiv.org/help/00README.html）說明：支援的 `compiler` 值包含 `xelatex`；
 但同時明說**不建議投稿前手動建立 `00README.json`**——
-arXiv 會在 **Review Files** 步驗自動生成它。
+arXiv 會在 **Review Files** 步驟自動產生它。
 
-**所以正確做法**：上傳後在 Review Files 步驗把編譯器選成 `xelatex`，並當場檢視編譯日誌。
+**所以正確做法**：上傳後在 Review Files 步驟把編譯器選成 `xelatex`，並當場檢視編譯日誌。
 
-**為什麼不能赌 pdflatex**：本包載入 `microtype` + `[T1]{fontenc}`；2026-09-23 在筆電實測
-`pdflatex paper.tex` 直接失敗（`pdfTeX error (font expansion): auto expansion is only possible with scalable fonts`， rc=1，未生成 PDF）。
-arXiv 的 TeX Live 字型較完整、**可能**没事，但沒必要赌——選 xelatex 是零成本。
+**為什麼不能賭 pdflatex**：本包載入 `microtype` + `[T1]{fontenc}`；2026-09-23 在筆電實測
+`pdflatex paper.tex` 直接失敗（`pdfTeX error (font expansion): auto expansion is only possible with scalable fonts`，rc=1，未產生 PDF）。
+arXiv 的 TeX Live 字型較完整、**可能**沒事，但沒必要賭——選 xelatex 是零成本。
 
 附註：arXiv **不會**跑 bibtex，所以必須自己附 `.bbl`。本包已附 `paper.bbl`（18 筆），合規。
-
