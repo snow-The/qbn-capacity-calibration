@@ -1141,9 +1141,9 @@ fixes where the ablation must sit; and the numerical verification of each propos
 For transparency, and consistent with the policy of arXiv, we record the scope of our
 use of large language models in producing this work.
 
-+ *Literature extraction and organisation.* Ten reference papers were converted to text
-  with an OCR pipeline, and the resulting notes were extracted and organised with the
-  assistance of a large language model.
++ *Literature extraction and organisation.* Background literature --- papers, surveys
+  and textbooks --- was converted to text with an OCR pipeline, and the resulting notes
+  were organised with the assistance of a large language model.
 + *Code generation and debugging.* The CUDA-Q probe scripts, the NumPy state-vector
   simulator and the evaluation tooling were written and debugged with the assistance of
   a large language model.
