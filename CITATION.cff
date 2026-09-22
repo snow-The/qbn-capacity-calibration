@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: software
+title: "Capacity Cliff and Calibration Ablation in a Hybrid Quantum--Classical Classifier"
+abstract: >-
+  Source, code and verification artefacts for a controlled study of whether the quantum
+  layer of a hybrid quantum--classical classifier contributes to accuracy and calibration.
+  Includes a dephasing ablation that classicalises the quantum layer within a single model,
+  a Lean 4 formalisation of the underlying commutation theorems, and a real-hardware
+  protocol for Quantum Inspire (Tuna-17).
+authors:
+  - family-names: "Yang"
+    given-names: "Xin"
+  - family-names: "Chung"
+    given-names: "Poyuan"
+  - family-names: "Zhong"
+    given-names: "Yuan-Liang"
+year: 2026
+license: "NOASSERTION"   # 待決定：論文文本建議 CC-BY-4.0，程式碼建議 MIT 或 Apache-2.0
+keywords:
+  - quantum machine learning
+  - quantum Bayesian networks
+  - calibration
+  - uncertainty quantification
+  - dephasing
+  - formal verification
+  - Lean 4

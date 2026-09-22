@@ -1,0 +1,20 @@
+版權所有 (c) 2026 Xin Yang、Poyuan Chung、Yuan-Liang Zhong
+
+---
+
+【授權條款待決定 —— 這是佔位檔案，發佈前必須替換】
+
+本專案同時包含「論文文本」與「程式碼」兩類內容，建議分別授權：
+
+1. 論文文本（paper/、theory/、docs/、README.md）
+   建議：Creative Commons Attribution 4.0 International (CC BY 4.0)
+   https://creativecommons.org/licenses/by/4.0/
+
+2. 程式碼（ml/、hardware/、formal/、c1/、*.py）
+   建議：MIT License（最寬鬆、學術界最常見）或 Apache License 2.0
+   （Apache-2.0 另含專利授權條款，若在意專利可選它）
+
+若採用上述組合，請把本檔拆成 LICENSE（CC BY 4.0 全文）與 LICENSE-CODE
+（MIT 或 Apache-2.0 全文），並在 README 說明。
+
+**在決定之前不要公開發佈。**

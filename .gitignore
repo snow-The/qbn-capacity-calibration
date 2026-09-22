@@ -1,0 +1,51 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# --- Lean ---
+.lake/
+lake-packages/
+build/
+*.olean
+*.ilean
+
+# --- Typst / LaTeX 中間產物 ---
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+*.out
+*.blg
+*.bbl
+*.toc
+texput.log
+_verify/
+_probe_*.pdf
+_p*.png
+
+# --- 憑證（絕對不能進版控）---
+.env
+.env.*
+*.key
+*.pem
+config.json
+.quantuminspire/
+*credentials*
+*token*
+
+# --- 編輯器 / 系統 ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- 建置輸出（可由腳本重建）---
+submission/
+*.zip
+!results/*.json

@@ -1,0 +1,141 @@
+{
+  "config": {
+    "depth": 2,
+    "steps": 60,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "n_train": 160,
+    "n_test": 300
+  },
+  "rows": [
+    {
+      "n_qubit": 6,
+      "n_trainable": 24,
+      "seed": 0,
+      "train_loss": 1.619,
+      "train_acc": 0.55,
+      "test_acc": 0.4967,
+      "loss_history": [
+        2.223,
+        1.8123,
+        1.64,
+        1.619
+      ]
+    },
+    {
+      "n_qubit": 6,
+      "n_trainable": 24,
+      "seed": 1,
+      "train_loss": 1.6212,
+      "train_acc": 0.5625,
+      "test_acc": 0.4633,
+      "loss_history": [
+        2.0295,
+        1.6759,
+        1.6286,
+        1.6212
+      ]
+    },
+    {
+      "n_qubit": 6,
+      "n_trainable": 24,
+      "seed": 2,
+      "train_loss": 1.6417,
+      "train_acc": 0.525,
+      "test_acc": 0.4467,
+      "loss_history": [
+        2.0576,
+        1.7405,
+        1.6732,
+        1.6417
+      ]
+    },
+    {
+      "n_qubit": 8,
+      "n_trainable": 32,
+      "seed": 0,
+      "train_loss": 1.4881,
+      "train_acc": 0.5062,
+      "test_acc": 0.4533,
+      "loss_history": [
+        2.1225,
+        1.8655,
+        1.5518,
+        1.4881
+      ]
+    },
+    {
+      "n_qubit": 8,
+      "n_trainable": 32,
+      "seed": 1,
+      "train_loss": 1.4908,
+      "train_acc": 0.4938,
+      "test_acc": 0.4,
+      "loss_history": [
+        2.1424,
+        1.9494,
+        1.5766,
+        1.4908
+      ]
+    },
+    {
+      "n_qubit": 8,
+      "n_trainable": 32,
+      "seed": 2,
+      "train_loss": 1.769,
+      "train_acc": 0.425,
+      "test_acc": 0.37,
+      "loss_history": [
+        2.0583,
+        1.9549,
+        1.8507,
+        1.769
+      ]
+    },
+    {
+      "n_qubit": 10,
+      "n_trainable": 40,
+      "seed": 0,
+      "train_loss": 2.0612,
+      "train_acc": 0.1688,
+      "test_acc": 0.1367,
+      "loss_history": [
+        2.0963,
+        2.078,
+        2.0712,
+        2.0612
+      ]
+    },
+    {
+      "n_qubit": 10,
+      "n_trainable": 40,
+      "seed": 1,
+      "train_loss": 1.9745,
+      "train_acc": 0.2375,
+      "test_acc": 0.2767,
+      "loss_history": [
+        2.0776,
+        2.0654,
+        2.0348,
+        1.9745
+      ]
+    },
+    {
+      "n_qubit": 10,
+      "n_trainable": 40,
+      "seed": 2,
+      "train_loss": 2.054,
+      "train_acc": 0.15,
+      "test_acc": 0.18,
+      "loss_history": [
+        2.0989,
+        2.0771,
+        2.0688,
+        2.054
+      ]
+    }
+  ]
+}

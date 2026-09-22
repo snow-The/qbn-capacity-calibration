@@ -1,0 +1,3617 @@
+{
+ "experiment": "s17_dephasing_ablation",
+ "generated_at": "2026-09-20 19:50:09",
+ "config": {
+  "n_qubit": 5,
+  "n_class": 8,
+  "depth": 2,
+  "n_trainable": 20,
+  "steps": 800,
+  "lr": 0.08,
+  "seeds": [
+   7,
+   21,
+   42,
+   84,
+   168
+  ],
+  "arms": [
+   "A_baseline",
+   "B_dephase_front",
+   "C_dephase_end",
+   "D_depolar_front"
+  ],
+  "data_seed": 12345,
+  "n_train": 80,
+  "n_test": 300,
+  "chance": 0.125,
+  "weight_init_std": 0.3,
+  "channel_pos_front": 0,
+  "channel_pos_end": 2,
+  "ece_bins": 10,
+  "gradient": "adjoint",
+  "gradient_note": "adjoint (reverse mode); cross-checked against parameter shift and central differences",
+  "simulator": "density matrix 2^n x 2^n (numpy, big-endian, allocation-free in-place kernels)",
+  "readout": "qubits 0,1,2 -> 8 classes (as in s09/s12)"
+ },
+ "channel_semantics": {
+  "dephase": "D_S(rho) = sum_b P_b rho P_b; mask from dmtools.dephase_mask",
+  "depolarize": "E_t(rho) = (1-p) rho + p Tr_t[rho] (x) I/2, all qubits",
+  "depolarize_pauli_rate": "q = 4p/3",
+  "matched_quantity": "mean purity Tr[rho^2] after the channel"
+ },
+ "preflight": {
+  "checks": [
+   {
+    "name": "去相位實作 == dmtools.dephase（遮罩形式）",
+    "ok": true,
+    "detail": "max|d| = 0.000e+00"
+   },
+   {
+    "name": "dmtools.dephase == dephase_sum_form（Kraus 求和形式）",
+    "ok": true,
+    "detail": "max|d| = 0.000e+00"
+   },
+   {
+    "name": "去相位保跡、Hermitian 保持、非對角元歸零",
+    "ok": true,
+    "detail": "Tr = 1.000000000000"
+   },
+   {
+    "name": "密度矩陣模擬器 == s09 狀態向量模擬器（無通道）",
+    "ok": true,
+    "detail": "max|dP| = 4.441e-16"
+   },
+   {
+    "name": "★ 臂 C（尾端去相位）對 8 類機率是精確 no-op",
+    "ok": true,
+    "detail": "max|P_C - P_A| = 0.000e+00（門檻 1e-14）"
+   },
+   {
+    "name": "★ 臂 C 對 32 維 Born 機率也是精確 no-op",
+    "ok": true,
+    "detail": "max|dp| = 0.000e+00"
+   },
+   {
+    "name": "臂 B（編碼層後去相位）確實改變機率（非 no-op）",
+    "ok": true,
+    "detail": "max|P_B - P_A| = 0.186113"
+   },
+   {
+    "name": "去相位後只接 RZ+CX 時機率不變（T5：么模仿塊閘與 D 交換）",
+    "ok": true,
+    "detail": "max|dp| = 0.000e+00"
+   },
+   {
+    "name": "退極化等純度校準：二分法 == 閉式解",
+    "ok": true,
+    "detail": "p_bisect = 0.565651633818  p_closed = 0.565651633818  |d| = 1.477e-14"
+   },
+   {
+    "name": "校準後純度確實匹配",
+    "ok": true,
+    "detail": "目標 = 0.074154161608  達成 = 0.074154161608"
+   },
+   {
+    "name": "單 qubit 退極化純度公式 Tr[rho^2] -> 1-p+p^2/2",
+    "ok": true,
+    "detail": "|d| = 1.110e-16"
+   },
+   {
+    "name": "參數平移梯度 == 中心差分（臂 B，通道在電路中間）",
+    "ok": true,
+    "detail": "max abs err = 3.806e-10"
+   },
+   {
+    "name": "adjoint 梯度 == 參數平移梯度（臂 A）",
+    "ok": true,
+    "detail": "rel err = 1.136e-15"
+   },
+   {
+    "name": "adjoint 梯度 == 參數平移梯度（臂 B）",
+    "ok": true,
+    "detail": "rel err = 3.001e-15"
+   },
+   {
+    "name": "adjoint 梯度 == 參數平移梯度（臂 C）",
+    "ok": true,
+    "detail": "rel err = 1.136e-15"
+   },
+   {
+    "name": "adjoint 梯度 == 參數平移梯度（臂 D）",
+    "ok": true,
+    "detail": "rel err = 3.679e-15"
+   },
+   {
+    "name": "★ 臂 C 的 adjoint 梯度 == 臂 A（0 差值）",
+    "ok": true,
+    "detail": "max|dg| = 0.000e+00"
+   }
+  ],
+  "all_pass": true,
+  "arm_c_max_dp": 0.0,
+  "arm_c_max_dp_basis": 0.0,
+  "arm_b_max_dp": 0.1861125222999867,
+  "gradient_rel_err": {
+   "A": 1.1364636054188e-15,
+   "B": 3.001197790526004e-15,
+   "C": 1.1364636054188e-15,
+   "D": 3.678837603577481e-15
+  },
+  "calibration": {
+   "target_purity": 0.07415416160840366,
+   "p": 0.565651633817879,
+   "p_closed_form": 0.5656516338178642
+  }
+ },
+ "calibration": {
+  "target_purity": 0.07415416160840366,
+  "p": 0.565651633817879,
+  "p_closed_form": 0.5656516338178642,
+  "purity_at_p": 0.07415416160839963,
+  "trace": [
+   {
+    "it": 0,
+    "p": 0.5,
+    "purity": 0.09536743164062501,
+    "diff": 0.021213270032221357
+   },
+   {
+    "it": 1,
+    "p": 0.75,
+    "purity": 0.0423150360584259,
+    "diff": -0.031839125549977754
+   },
+   {
+    "it": 2,
+    "p": 0.625,
+    "purity": 0.060334324167342857,
+    "diff": -0.0138198374410608
+   },
+   {
+    "it": 3,
+    "p": 0.5625,
+    "purity": 0.07501522079067513,
+    "diff": 0.000861059182271473
+   },
+   {
+    "it": 4,
+    "p": 0.59375,
+    "purity": 0.06707372977002837,
+    "diff": -0.007080431838375284
+   },
+   {
+    "it": 5,
+    "p": 0.578125,
+    "purity": 0.07088214806188513,
+    "diff": -0.003272013546518529
+   },
+   {
+    "it": 6,
+    "p": 0.5703125,
+    "purity": 0.07290647912780202,
+    "diff": -0.0012476824806016418
+   },
+   {
+    "it": 7,
+    "p": 0.56640625,
+    "purity": 0.0739500880641474,
+    "diff": -0.00020407354425625024
+   },
+   {
+    "it": 8,
+    "p": 0.564453125,
+    "purity": 0.0744799371409215,
+    "diff": 0.00032577553251784963
+   },
+   {
+    "it": 9,
+    "p": 0.5654296875,
+    "purity": 0.07421433665472268,
+    "diff": 6.017504631902759e-05
+   },
+   {
+    "it": 10,
+    "p": 0.56591796875,
+    "purity": 0.07408204379225543,
+    "diff": -7.211781614822887e-05
+   },
+   {
+    "it": 11,
+    "p": 0.565673828125,
+    "purity": 0.07414814802930939,
+    "diff": -6.013579094271693e-06
+   },
+   {
+    "it": 12,
+    "p": 0.5655517578125,
+    "purity": 0.07418123178691542,
+    "diff": 2.7070178511764964e-05
+   },
+   {
+    "it": 13,
+    "p": 0.56561279296875,
+    "purity": 0.07416468727015706,
+    "diff": 1.0525661753399418e-05
+   },
+   {
+    "it": 14,
+    "p": 0.565643310546875,
+    "purity": 0.07415641699034684,
+    "diff": 2.255381943178092e-06
+   },
+   {
+    "it": 15,
+    "p": 0.5656585693359375,
+    "purity": 0.07415228234499432,
+    "diff": -1.8792634093323102e-06
+   },
+   {
+    "it": 16,
+    "p": 0.5656509399414062,
+    "purity": 0.07415434962646053,
+    "diff": 1.8801805687362894e-07
+   },
+   {
+    "it": 17,
+    "p": 0.5656547546386719,
+    "purity": 0.0741533159754251,
+    "diff": -8.456329785577754e-07
+   },
+   {
+    "it": 18,
+    "p": 0.5656528472900391,
+    "purity": 0.07415383279836722,
+    "diff": -3.288100364345903e-07
+   },
+   {
+    "it": 19,
+    "p": 0.5656518936157227,
+    "purity": 0.07415409121176997,
+    "diff": -7.039663368901827e-08
+   },
+   {
+    "it": 20,
+    "p": 0.5656514167785645,
+    "purity": 0.07415422041895428,
+    "diff": 5.881055062384455e-08
+   },
+   {
+    "it": 21,
+    "p": 0.5656516551971436,
+    "purity": 0.07415415581532188,
+    "diff": -5.793081778171505e-09
+   },
+   {
+    "it": 22,
+    "p": 0.565651535987854,
+    "purity": 0.07415418811712801,
+    "diff": 2.6508724354501467e-08
+   },
+   {
+    "it": 23,
+    "p": 0.5656515955924988,
+    "purity": 0.07415417196622243,
+    "diff": 1.0357818769346494e-08
+   },
+   {
+    "it": 24,
+    "p": 0.5656516253948212,
+    "purity": 0.07415416389077154,
+    "diff": 2.282367878025937e-09
+   },
+   {
+    "it": 25,
+    "p": 0.5656516402959824,
+    "purity": 0.07415415985304655,
+    "diff": -1.7553571096673437e-09
+   },
+   {
+    "it": 26,
+    "p": 0.5656516328454018,
+    "purity": 0.074154161871909,
+    "diff": 2.635053425459333e-10
+   },
+   {
+    "it": 27,
+    "p": 0.5656516365706921,
+    "purity": 0.07415416086247775,
+    "diff": -7.459259043773869e-10
+   },
+   {
+    "it": 28,
+    "p": 0.5656516347080469,
+    "purity": 0.07415416136719337,
+    "diff": -2.4121028785462073e-10
+   },
+   {
+    "it": 29,
+    "p": 0.5656516337767243,
+    "purity": 0.07415416161955117,
+    "diff": 1.1147513467868464e-11
+   },
+   {
+    "it": 30,
+    "p": 0.5656516342423856,
+    "purity": 0.07415416149337227,
+    "diff": -1.1503138719337613e-10
+   },
+   {
+    "it": 31,
+    "p": 0.565651634009555,
+    "purity": 0.07415416155646173,
+    "diff": -5.194192298496603e-11
+   },
+   {
+    "it": 32,
+    "p": 0.5656516338931397,
+    "purity": 0.07415416158800646,
+    "diff": -2.0397197819654878e-11
+   },
+   {
+    "it": 33,
+    "p": 0.565651633834932,
+    "purity": 0.07415416160377883,
+    "diff": -4.624828298105399e-12
+   },
+   {
+    "it": 34,
+    "p": 0.5656516338058282,
+    "purity": 0.074154161611665,
+    "diff": 3.2613495237754364e-12
+   },
+   {
+    "it": 35,
+    "p": 0.5656516338203801,
+    "purity": 0.07415416160772191,
+    "diff": -6.817463260588852e-13
+   },
+   {
+    "it": 36,
+    "p": 0.5656516338131041,
+    "purity": 0.07415416160969346,
+    "diff": 1.2898015988582756e-12
+   },
+   {
+    "it": 37,
+    "p": 0.5656516338167421,
+    "purity": 0.07415416160870768,
+    "diff": 3.040206975057913e-13
+   },
+   {
+    "it": 38,
+    "p": 0.5656516338185611,
+    "purity": 0.0741541616082148,
+    "diff": -1.8886281427654694e-13
+   },
+   {
+    "it": 39,
+    "p": 0.5656516338176516,
+    "purity": 0.07415416160846125,
+    "diff": 5.759281940243e-14
+   },
+   {
+    "it": 40,
+    "p": 0.5656516338181063,
+    "purity": 0.07415416160833802,
+    "diff": -6.564193633096238e-14
+   },
+   {
+    "it": 41,
+    "p": 0.565651633817879,
+    "purity": 0.07415416160839963,
+    "diff": -4.0245584642661925e-15
+   }
+  ]
+ },
+ "rows": [
+  {
+   "arm": "A_baseline",
+   "label": "A 無通道（全量子）",
+   "kind": "none",
+   "pos": null,
+   "seed": 7,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.132576,
+   "train_nll": 1.573212,
+   "train_loss": 1.573212,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.579427
+    },
+    {
+     "step": 100,
+     "loss": 1.573227
+    },
+    {
+     "step": 150,
+     "loss": 1.573212
+    },
+    {
+     "step": 200,
+     "loss": 1.573212
+    },
+    {
+     "step": 250,
+     "loss": 1.573212
+    },
+    {
+     "step": 300,
+     "loss": 1.573212
+    },
+    {
+     "step": 350,
+     "loss": 1.573212
+    },
+    {
+     "step": 400,
+     "loss": 1.573212
+    },
+    {
+     "step": 450,
+     "loss": 1.573212
+    },
+    {
+     "step": 500,
+     "loss": 1.573212
+    },
+    {
+     "step": 550,
+     "loss": 1.573212
+    },
+    {
+     "step": 600,
+     "loss": 1.573212
+    },
+    {
+     "step": 650,
+     "loss": 1.573212
+    },
+    {
+     "step": 700,
+     "loss": 1.573212
+    },
+    {
+     "step": 750,
+     "loss": 1.573212
+    },
+    {
+     "step": 800,
+     "loss": 1.573212
+    }
+   ],
+   "seconds": 123.354,
+   "mean_max_prob": 0.235866,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.32,
+   "kl_meanpred_uniform": 0.065689,
+   "kl_persample_mean": 0.124771,
+   "mean_entropy": 1.954671,
+   "z_var_per_qubit": [
+    0.028008891219070547,
+    0.014491811825429855,
+    0.03543268837382412,
+    0.0132779021831474,
+    0.018122482717148558
+   ],
+   "z_var_mean": 0.021867,
+   "z_absmean": 0.157847,
+   "mean_purity": 1.0,
+   "pred_class_counts": [
+    3,
+    78,
+    62,
+    61,
+    0,
+    0,
+    0,
+    96
+   ],
+   "test_acc": 0.296667,
+   "ece": 0.098988,
+   "nll": 1.849953,
+   "brier": 0.810166
+  },
+  {
+   "arm": "A_baseline",
+   "label": "A 無通道（全量子）",
+   "kind": "none",
+   "pos": null,
+   "seed": 21,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.132576,
+   "train_nll": 1.573212,
+   "train_loss": 1.573212,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.578506
+    },
+    {
+     "step": 100,
+     "loss": 1.573242
+    },
+    {
+     "step": 150,
+     "loss": 1.573212
+    },
+    {
+     "step": 200,
+     "loss": 1.573212
+    },
+    {
+     "step": 250,
+     "loss": 1.573212
+    },
+    {
+     "step": 300,
+     "loss": 1.573212
+    },
+    {
+     "step": 350,
+     "loss": 1.573212
+    },
+    {
+     "step": 400,
+     "loss": 1.573212
+    },
+    {
+     "step": 450,
+     "loss": 1.573212
+    },
+    {
+     "step": 500,
+     "loss": 1.573212
+    },
+    {
+     "step": 550,
+     "loss": 1.573212
+    },
+    {
+     "step": 600,
+     "loss": 1.573212
+    },
+    {
+     "step": 650,
+     "loss": 1.573212
+    },
+    {
+     "step": 700,
+     "loss": 1.573212
+    },
+    {
+     "step": 750,
+     "loss": 1.573212
+    },
+    {
+     "step": 800,
+     "loss": 1.573212
+    }
+   ],
+   "seconds": 106.656,
+   "mean_max_prob": 0.235866,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.32,
+   "kl_meanpred_uniform": 0.065689,
+   "kl_persample_mean": 0.124771,
+   "mean_entropy": 1.954671,
+   "z_var_per_qubit": [
+    0.02800889121907052,
+    0.014491811825429827,
+    0.03543268837382407,
+    0.013277902183147392,
+    0.018122482717148523
+   ],
+   "z_var_mean": 0.021867,
+   "z_absmean": 0.157847,
+   "mean_purity": 1.0,
+   "pred_class_counts": [
+    3,
+    78,
+    62,
+    61,
+    0,
+    0,
+    0,
+    96
+   ],
+   "test_acc": 0.296667,
+   "ece": 0.098988,
+   "nll": 1.849953,
+   "brier": 0.810166
+  },
+  {
+   "arm": "A_baseline",
+   "label": "A 無通道（全量子）",
+   "kind": "none",
+   "pos": null,
+   "seed": 42,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.153217,
+   "train_nll": 1.580334,
+   "train_loss": 1.580334,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.617255
+    },
+    {
+     "step": 100,
+     "loss": 1.580506
+    },
+    {
+     "step": 150,
+     "loss": 1.580334
+    },
+    {
+     "step": 200,
+     "loss": 1.580334
+    },
+    {
+     "step": 250,
+     "loss": 1.580334
+    },
+    {
+     "step": 300,
+     "loss": 1.580334
+    },
+    {
+     "step": 350,
+     "loss": 1.580334
+    },
+    {
+     "step": 400,
+     "loss": 1.580334
+    },
+    {
+     "step": 450,
+     "loss": 1.580334
+    },
+    {
+     "step": 500,
+     "loss": 1.580334
+    },
+    {
+     "step": 550,
+     "loss": 1.580334
+    },
+    {
+     "step": 600,
+     "loss": 1.580334
+    },
+    {
+     "step": 650,
+     "loss": 1.580334
+    },
+    {
+     "step": 700,
+     "loss": 1.580334
+    },
+    {
+     "step": 750,
+     "loss": 1.580334
+    },
+    {
+     "step": 800,
+     "loss": 1.580334
+    }
+   ],
+   "seconds": 130.999,
+   "mean_max_prob": 0.220045,
+   "n_distinct_classes": 7,
+   "majority_frac": 0.493333,
+   "kl_meanpred_uniform": 0.036393,
+   "kl_persample_mean": 0.101399,
+   "mean_entropy": 1.978042,
+   "z_var_per_qubit": [
+    0.01801542128763262,
+    0.014754853082665569,
+    0.002053556504238609,
+    0.030280724072240216,
+    0.01348401661500634
+   ],
+   "z_var_mean": 0.015718,
+   "z_absmean": 0.15667,
+   "mean_purity": 1.0,
+   "pred_class_counts": [
+    17,
+    8,
+    23,
+    148,
+    4,
+    0,
+    43,
+    57
+   ],
+   "test_acc": 0.306667,
+   "ece": 0.086621,
+   "nll": 1.821684,
+   "brier": 0.807299
+  },
+  {
+   "arm": "A_baseline",
+   "label": "A 無通道（全量子）",
+   "kind": "none",
+   "pos": null,
+   "seed": 84,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.132576,
+   "train_nll": 1.573212,
+   "train_loss": 1.573212,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.591042
+    },
+    {
+     "step": 100,
+     "loss": 1.573262
+    },
+    {
+     "step": 150,
+     "loss": 1.573213
+    },
+    {
+     "step": 200,
+     "loss": 1.573212
+    },
+    {
+     "step": 250,
+     "loss": 1.573212
+    },
+    {
+     "step": 300,
+     "loss": 1.573212
+    },
+    {
+     "step": 350,
+     "loss": 1.573212
+    },
+    {
+     "step": 400,
+     "loss": 1.573212
+    },
+    {
+     "step": 450,
+     "loss": 1.573212
+    },
+    {
+     "step": 500,
+     "loss": 1.573212
+    },
+    {
+     "step": 550,
+     "loss": 1.573212
+    },
+    {
+     "step": 600,
+     "loss": 1.573212
+    },
+    {
+     "step": 650,
+     "loss": 1.573212
+    },
+    {
+     "step": 700,
+     "loss": 1.573212
+    },
+    {
+     "step": 750,
+     "loss": 1.573212
+    },
+    {
+     "step": 800,
+     "loss": 1.573212
+    }
+   ],
+   "seconds": 146.259,
+   "mean_max_prob": 0.235866,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.32,
+   "kl_meanpred_uniform": 0.065689,
+   "kl_persample_mean": 0.124771,
+   "mean_entropy": 1.954671,
+   "z_var_per_qubit": [
+    0.028008891219070554,
+    0.014491811825429855,
+    0.0354326883738241,
+    0.013277902183147417,
+    0.01812248271714857
+   ],
+   "z_var_mean": 0.021867,
+   "z_absmean": 0.157847,
+   "mean_purity": 1.0,
+   "pred_class_counts": [
+    3,
+    78,
+    62,
+    61,
+    0,
+    0,
+    0,
+    96
+   ],
+   "test_acc": 0.296667,
+   "ece": 0.098988,
+   "nll": 1.849953,
+   "brier": 0.810166
+  },
+  {
+   "arm": "A_baseline",
+   "label": "A 無通道（全量子）",
+   "kind": "none",
+   "pos": null,
+   "seed": 168,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.4125,
+   "train_ece": 0.143176,
+   "train_nll": 1.62675,
+   "train_loss": 1.62675,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.636083
+    },
+    {
+     "step": 100,
+     "loss": 1.626811
+    },
+    {
+     "step": 150,
+     "loss": 1.626751
+    },
+    {
+     "step": 200,
+     "loss": 1.62675
+    },
+    {
+     "step": 250,
+     "loss": 1.62675
+    },
+    {
+     "step": 300,
+     "loss": 1.62675
+    },
+    {
+     "step": 350,
+     "loss": 1.62675
+    },
+    {
+     "step": 400,
+     "loss": 1.62675
+    },
+    {
+     "step": 450,
+     "loss": 1.62675
+    },
+    {
+     "step": 500,
+     "loss": 1.62675
+    },
+    {
+     "step": 550,
+     "loss": 1.62675
+    },
+    {
+     "step": 600,
+     "loss": 1.62675
+    },
+    {
+     "step": 650,
+     "loss": 1.62675
+    },
+    {
+     "step": 700,
+     "loss": 1.62675
+    },
+    {
+     "step": 750,
+     "loss": 1.62675
+    },
+    {
+     "step": 800,
+     "loss": 1.62675
+    }
+   ],
+   "seconds": 140.676,
+   "mean_max_prob": 0.250766,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.383333,
+   "kl_meanpred_uniform": 0.092641,
+   "kl_persample_mean": 0.167618,
+   "mean_entropy": 1.911824,
+   "z_var_per_qubit": [
+    0.011474815591090575,
+    0.0956780407192548,
+    0.0031473192854798086,
+    0.018915128926274637,
+    0.028505201121930435
+   ],
+   "z_var_mean": 0.031544,
+   "z_absmean": 0.221904,
+   "mean_purity": 1.0,
+   "pred_class_counts": [
+    85,
+    3,
+    115,
+    35,
+    0,
+    0,
+    0,
+    62
+   ],
+   "test_acc": 0.406667,
+   "ece": 0.1559,
+   "nll": 1.883454,
+   "brier": 0.813978
+  },
+  {
+   "arm": "B_dephase_front",
+   "label": "B 去相位（編碼層後）",
+   "kind": "dephase",
+   "pos": 0,
+   "seed": 7,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.25,
+   "train_ece": 0.109237,
+   "train_nll": 2.024285,
+   "train_loss": 2.024285,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 2.025174
+    },
+    {
+     "step": 100,
+     "loss": 2.024303
+    },
+    {
+     "step": 150,
+     "loss": 2.024288
+    },
+    {
+     "step": 200,
+     "loss": 2.024287
+    },
+    {
+     "step": 250,
+     "loss": 2.024285
+    },
+    {
+     "step": 300,
+     "loss": 2.024285
+    },
+    {
+     "step": 350,
+     "loss": 2.024285
+    },
+    {
+     "step": 400,
+     "loss": 2.024285
+    },
+    {
+     "step": 450,
+     "loss": 2.024285
+    },
+    {
+     "step": 500,
+     "loss": 2.024285
+    },
+    {
+     "step": 550,
+     "loss": 2.024285
+    },
+    {
+     "step": 600,
+     "loss": 2.024285
+    },
+    {
+     "step": 650,
+     "loss": 2.024285
+    },
+    {
+     "step": 700,
+     "loss": 2.024285
+    },
+    {
+     "step": 750,
+     "loss": 2.024285
+    },
+    {
+     "step": 800,
+     "loss": 2.024285
+    }
+   ],
+   "seconds": 136.89,
+   "mean_max_prob": 0.130724,
+   "n_distinct_classes": 8,
+   "majority_frac": 0.196667,
+   "kl_meanpred_uniform": 0.0,
+   "kl_persample_mean": 0.001144,
+   "mean_entropy": 2.078297,
+   "z_var_per_qubit": [
+    1.4183889344107834e-06,
+    0.00054994416725105,
+    4.09240627482887e-09,
+    1.0413215006844443e-07,
+    2.020883751524591e-06
+   ],
+   "z_var_mean": 0.000111,
+   "z_absmean": 0.003601,
+   "mean_purity": 0.044936,
+   "pred_class_counts": [
+    33,
+    32,
+    23,
+    42,
+    57,
+    32,
+    22,
+    59
+   ],
+   "test_acc": 0.23,
+   "ece": 0.099276,
+   "nll": 2.055836,
+   "brier": 0.869044
+  },
+  {
+   "arm": "B_dephase_front",
+   "label": "B 去相位（編碼層後）",
+   "kind": "dephase",
+   "pos": 0,
+   "seed": 21,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.25,
+   "train_ece": 0.109237,
+   "train_nll": 2.024285,
+   "train_loss": 2.024285,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 2.026708
+    },
+    {
+     "step": 100,
+     "loss": 2.024308
+    },
+    {
+     "step": 150,
+     "loss": 2.024289
+    },
+    {
+     "step": 200,
+     "loss": 2.024288
+    },
+    {
+     "step": 250,
+     "loss": 2.024286
+    },
+    {
+     "step": 300,
+     "loss": 2.024285
+    },
+    {
+     "step": 350,
+     "loss": 2.024285
+    },
+    {
+     "step": 400,
+     "loss": 2.024285
+    },
+    {
+     "step": 450,
+     "loss": 2.024285
+    },
+    {
+     "step": 500,
+     "loss": 2.024285
+    },
+    {
+     "step": 550,
+     "loss": 2.024285
+    },
+    {
+     "step": 600,
+     "loss": 2.024285
+    },
+    {
+     "step": 650,
+     "loss": 2.024285
+    },
+    {
+     "step": 700,
+     "loss": 2.024285
+    },
+    {
+     "step": 750,
+     "loss": 2.024285
+    },
+    {
+     "step": 800,
+     "loss": 2.024285
+    }
+   ],
+   "seconds": 113.16,
+   "mean_max_prob": 0.130724,
+   "n_distinct_classes": 8,
+   "majority_frac": 0.196667,
+   "kl_meanpred_uniform": 0.0,
+   "kl_persample_mean": 0.001144,
+   "mean_entropy": 2.078297,
+   "z_var_per_qubit": [
+    1.4183889344168623e-06,
+    0.0005499441672510061,
+    4.092406274849286e-09,
+    1.0413215006872322e-07,
+    2.020883751528972e-06
+   ],
+   "z_var_mean": 0.000111,
+   "z_absmean": 0.003601,
+   "mean_purity": 0.044936,
+   "pred_class_counts": [
+    33,
+    32,
+    23,
+    42,
+    57,
+    32,
+    22,
+    59
+   ],
+   "test_acc": 0.23,
+   "ece": 0.099276,
+   "nll": 2.055836,
+   "brier": 0.869044
+  },
+  {
+   "arm": "B_dephase_front",
+   "label": "B 去相位（編碼層後）",
+   "kind": "dephase",
+   "pos": 0,
+   "seed": 42,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.25,
+   "train_ece": 0.109237,
+   "train_nll": 2.024285,
+   "train_loss": 2.024286,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 2.043247
+    },
+    {
+     "step": 100,
+     "loss": 2.03464
+    },
+    {
+     "step": 150,
+     "loss": 2.024446
+    },
+    {
+     "step": 200,
+     "loss": 2.024291
+    },
+    {
+     "step": 250,
+     "loss": 2.024291
+    },
+    {
+     "step": 300,
+     "loss": 2.02429
+    },
+    {
+     "step": 350,
+     "loss": 2.02429
+    },
+    {
+     "step": 400,
+     "loss": 2.024289
+    },
+    {
+     "step": 450,
+     "loss": 2.024286
+    },
+    {
+     "step": 500,
+     "loss": 2.024285
+    },
+    {
+     "step": 550,
+     "loss": 2.024285
+    },
+    {
+     "step": 600,
+     "loss": 2.024285
+    },
+    {
+     "step": 650,
+     "loss": 2.024285
+    },
+    {
+     "step": 700,
+     "loss": 2.024285
+    },
+    {
+     "step": 750,
+     "loss": 2.024285
+    },
+    {
+     "step": 800,
+     "loss": 2.024286
+    }
+   ],
+   "seconds": 105.664,
+   "mean_max_prob": 0.130724,
+   "n_distinct_classes": 8,
+   "majority_frac": 0.196667,
+   "kl_meanpred_uniform": 0.0,
+   "kl_persample_mean": 0.001144,
+   "mean_entropy": 2.078297,
+   "z_var_per_qubit": [
+    1.4179330890948388e-06,
+    0.0005499650446949809,
+    4.090849941472892e-09,
+    1.0410227473228464e-07,
+    2.020617619052906e-06
+   ],
+   "z_var_mean": 0.000111,
+   "z_absmean": 0.003601,
+   "mean_purity": 0.044936,
+   "pred_class_counts": [
+    33,
+    32,
+    23,
+    42,
+    57,
+    32,
+    22,
+    59
+   ],
+   "test_acc": 0.23,
+   "ece": 0.099276,
+   "nll": 2.055836,
+   "brier": 0.869044
+  },
+  {
+   "arm": "B_dephase_front",
+   "label": "B 去相位（編碼層後）",
+   "kind": "dephase",
+   "pos": 0,
+   "seed": 84,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.25,
+   "train_ece": 0.109237,
+   "train_nll": 2.024285,
+   "train_loss": 2.024285,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 2.0258
+    },
+    {
+     "step": 100,
+     "loss": 2.024292
+    },
+    {
+     "step": 150,
+     "loss": 2.024285
+    },
+    {
+     "step": 200,
+     "loss": 2.024285
+    },
+    {
+     "step": 250,
+     "loss": 2.024285
+    },
+    {
+     "step": 300,
+     "loss": 2.024285
+    },
+    {
+     "step": 350,
+     "loss": 2.024285
+    },
+    {
+     "step": 400,
+     "loss": 2.024285
+    },
+    {
+     "step": 450,
+     "loss": 2.024285
+    },
+    {
+     "step": 500,
+     "loss": 2.024285
+    },
+    {
+     "step": 550,
+     "loss": 2.024285
+    },
+    {
+     "step": 600,
+     "loss": 2.024285
+    },
+    {
+     "step": 650,
+     "loss": 2.024285
+    },
+    {
+     "step": 700,
+     "loss": 2.024285
+    },
+    {
+     "step": 750,
+     "loss": 2.024285
+    },
+    {
+     "step": 800,
+     "loss": 2.024285
+    }
+   ],
+   "seconds": 111.42,
+   "mean_max_prob": 0.130724,
+   "n_distinct_classes": 8,
+   "majority_frac": 0.196667,
+   "kl_meanpred_uniform": 0.0,
+   "kl_persample_mean": 0.001144,
+   "mean_entropy": 2.078297,
+   "z_var_per_qubit": [
+    1.4183889344141768e-06,
+    0.0005499441672510268,
+    4.092406274839494e-09,
+    1.0413215006859508e-07,
+    2.0208837515270574e-06
+   ],
+   "z_var_mean": 0.000111,
+   "z_absmean": 0.003601,
+   "mean_purity": 0.044936,
+   "pred_class_counts": [
+    33,
+    32,
+    23,
+    42,
+    57,
+    32,
+    22,
+    59
+   ],
+   "test_acc": 0.23,
+   "ece": 0.099276,
+   "nll": 2.055836,
+   "brier": 0.869044
+  },
+  {
+   "arm": "B_dephase_front",
+   "label": "B 去相位（編碼層後）",
+   "kind": "dephase",
+   "pos": 0,
+   "seed": 168,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.25,
+   "train_ece": 0.109237,
+   "train_nll": 2.024285,
+   "train_loss": 2.024285,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 2.02535
+    },
+    {
+     "step": 100,
+     "loss": 2.024291
+    },
+    {
+     "step": 150,
+     "loss": 2.024285
+    },
+    {
+     "step": 200,
+     "loss": 2.024285
+    },
+    {
+     "step": 250,
+     "loss": 2.024285
+    },
+    {
+     "step": 300,
+     "loss": 2.024285
+    },
+    {
+     "step": 350,
+     "loss": 2.024285
+    },
+    {
+     "step": 400,
+     "loss": 2.024285
+    },
+    {
+     "step": 450,
+     "loss": 2.024285
+    },
+    {
+     "step": 500,
+     "loss": 2.024285
+    },
+    {
+     "step": 550,
+     "loss": 2.024285
+    },
+    {
+     "step": 600,
+     "loss": 2.024285
+    },
+    {
+     "step": 650,
+     "loss": 2.024285
+    },
+    {
+     "step": 700,
+     "loss": 2.024285
+    },
+    {
+     "step": 750,
+     "loss": 2.024285
+    },
+    {
+     "step": 800,
+     "loss": 2.024285
+    }
+   ],
+   "seconds": 130.21,
+   "mean_max_prob": 0.130724,
+   "n_distinct_classes": 8,
+   "majority_frac": 0.196667,
+   "kl_meanpred_uniform": 0.0,
+   "kl_persample_mean": 0.001144,
+   "mean_entropy": 2.078297,
+   "z_var_per_qubit": [
+    1.4183889344139263e-06,
+    0.0005499441672510277,
+    4.09240627483939e-09,
+    1.0413215006858309e-07,
+    2.0208837515268473e-06
+   ],
+   "z_var_mean": 0.000111,
+   "z_absmean": 0.003601,
+   "mean_purity": 0.044936,
+   "pred_class_counts": [
+    33,
+    32,
+    23,
+    42,
+    57,
+    32,
+    22,
+    59
+   ],
+   "test_acc": 0.23,
+   "ece": 0.099276,
+   "nll": 2.055836,
+   "brier": 0.869044
+  },
+  {
+   "arm": "C_dephase_end",
+   "label": "C 去相位（電路尾端，測量前）",
+   "kind": "dephase",
+   "pos": 2,
+   "seed": 7,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.132576,
+   "train_nll": 1.573212,
+   "train_loss": 1.573212,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.579427
+    },
+    {
+     "step": 100,
+     "loss": 1.573227
+    },
+    {
+     "step": 150,
+     "loss": 1.573212
+    },
+    {
+     "step": 200,
+     "loss": 1.573212
+    },
+    {
+     "step": 250,
+     "loss": 1.573212
+    },
+    {
+     "step": 300,
+     "loss": 1.573212
+    },
+    {
+     "step": 350,
+     "loss": 1.573212
+    },
+    {
+     "step": 400,
+     "loss": 1.573212
+    },
+    {
+     "step": 450,
+     "loss": 1.573212
+    },
+    {
+     "step": 500,
+     "loss": 1.573212
+    },
+    {
+     "step": 550,
+     "loss": 1.573212
+    },
+    {
+     "step": 600,
+     "loss": 1.573212
+    },
+    {
+     "step": 650,
+     "loss": 1.573212
+    },
+    {
+     "step": 700,
+     "loss": 1.573212
+    },
+    {
+     "step": 750,
+     "loss": 1.573212
+    },
+    {
+     "step": 800,
+     "loss": 1.573212
+    }
+   ],
+   "seconds": 139.909,
+   "mean_max_prob": 0.235866,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.32,
+   "kl_meanpred_uniform": 0.065689,
+   "kl_persample_mean": 0.124771,
+   "mean_entropy": 1.954671,
+   "z_var_per_qubit": [
+    0.028008891219070547,
+    0.014491811825429855,
+    0.03543268837382412,
+    0.0132779021831474,
+    0.018122482717148558
+   ],
+   "z_var_mean": 0.021867,
+   "z_absmean": 0.157847,
+   "mean_purity": 0.131767,
+   "pred_class_counts": [
+    3,
+    78,
+    62,
+    61,
+    0,
+    0,
+    0,
+    96
+   ],
+   "test_acc": 0.296667,
+   "ece": 0.098988,
+   "nll": 1.849953,
+   "brier": 0.810166
+  },
+  {
+   "arm": "C_dephase_end",
+   "label": "C 去相位（電路尾端，測量前）",
+   "kind": "dephase",
+   "pos": 2,
+   "seed": 21,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.132576,
+   "train_nll": 1.573212,
+   "train_loss": 1.573212,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.578506
+    },
+    {
+     "step": 100,
+     "loss": 1.573242
+    },
+    {
+     "step": 150,
+     "loss": 1.573212
+    },
+    {
+     "step": 200,
+     "loss": 1.573212
+    },
+    {
+     "step": 250,
+     "loss": 1.573212
+    },
+    {
+     "step": 300,
+     "loss": 1.573212
+    },
+    {
+     "step": 350,
+     "loss": 1.573212
+    },
+    {
+     "step": 400,
+     "loss": 1.573212
+    },
+    {
+     "step": 450,
+     "loss": 1.573212
+    },
+    {
+     "step": 500,
+     "loss": 1.573212
+    },
+    {
+     "step": 550,
+     "loss": 1.573212
+    },
+    {
+     "step": 600,
+     "loss": 1.573212
+    },
+    {
+     "step": 650,
+     "loss": 1.573212
+    },
+    {
+     "step": 700,
+     "loss": 1.573212
+    },
+    {
+     "step": 750,
+     "loss": 1.573212
+    },
+    {
+     "step": 800,
+     "loss": 1.573212
+    }
+   ],
+   "seconds": 152.039,
+   "mean_max_prob": 0.235866,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.32,
+   "kl_meanpred_uniform": 0.065689,
+   "kl_persample_mean": 0.124771,
+   "mean_entropy": 1.954671,
+   "z_var_per_qubit": [
+    0.02800889121907052,
+    0.014491811825429827,
+    0.03543268837382407,
+    0.013277902183147392,
+    0.018122482717148523
+   ],
+   "z_var_mean": 0.021867,
+   "z_absmean": 0.157847,
+   "mean_purity": 0.131767,
+   "pred_class_counts": [
+    3,
+    78,
+    62,
+    61,
+    0,
+    0,
+    0,
+    96
+   ],
+   "test_acc": 0.296667,
+   "ece": 0.098988,
+   "nll": 1.849953,
+   "brier": 0.810166
+  },
+  {
+   "arm": "C_dephase_end",
+   "label": "C 去相位（電路尾端，測量前）",
+   "kind": "dephase",
+   "pos": 2,
+   "seed": 42,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.153217,
+   "train_nll": 1.580334,
+   "train_loss": 1.580334,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.617255
+    },
+    {
+     "step": 100,
+     "loss": 1.580506
+    },
+    {
+     "step": 150,
+     "loss": 1.580334
+    },
+    {
+     "step": 200,
+     "loss": 1.580334
+    },
+    {
+     "step": 250,
+     "loss": 1.580334
+    },
+    {
+     "step": 300,
+     "loss": 1.580334
+    },
+    {
+     "step": 350,
+     "loss": 1.580334
+    },
+    {
+     "step": 400,
+     "loss": 1.580334
+    },
+    {
+     "step": 450,
+     "loss": 1.580334
+    },
+    {
+     "step": 500,
+     "loss": 1.580334
+    },
+    {
+     "step": 550,
+     "loss": 1.580334
+    },
+    {
+     "step": 600,
+     "loss": 1.580334
+    },
+    {
+     "step": 650,
+     "loss": 1.580334
+    },
+    {
+     "step": 700,
+     "loss": 1.580334
+    },
+    {
+     "step": 750,
+     "loss": 1.580334
+    },
+    {
+     "step": 800,
+     "loss": 1.580334
+    }
+   ],
+   "seconds": 134.416,
+   "mean_max_prob": 0.220045,
+   "n_distinct_classes": 7,
+   "majority_frac": 0.493333,
+   "kl_meanpred_uniform": 0.036393,
+   "kl_persample_mean": 0.101399,
+   "mean_entropy": 1.978042,
+   "z_var_per_qubit": [
+    0.01801542128763262,
+    0.014754853082665569,
+    0.002053556504238609,
+    0.030280724072240216,
+    0.01348401661500634
+   ],
+   "z_var_mean": 0.015718,
+   "z_absmean": 0.15667,
+   "mean_purity": 0.106649,
+   "pred_class_counts": [
+    17,
+    8,
+    23,
+    148,
+    4,
+    0,
+    43,
+    57
+   ],
+   "test_acc": 0.306667,
+   "ece": 0.086621,
+   "nll": 1.821684,
+   "brier": 0.807299
+  },
+  {
+   "arm": "C_dephase_end",
+   "label": "C 去相位（電路尾端，測量前）",
+   "kind": "dephase",
+   "pos": 2,
+   "seed": 84,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.425,
+   "train_ece": 0.132576,
+   "train_nll": 1.573212,
+   "train_loss": 1.573212,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.591042
+    },
+    {
+     "step": 100,
+     "loss": 1.573262
+    },
+    {
+     "step": 150,
+     "loss": 1.573213
+    },
+    {
+     "step": 200,
+     "loss": 1.573212
+    },
+    {
+     "step": 250,
+     "loss": 1.573212
+    },
+    {
+     "step": 300,
+     "loss": 1.573212
+    },
+    {
+     "step": 350,
+     "loss": 1.573212
+    },
+    {
+     "step": 400,
+     "loss": 1.573212
+    },
+    {
+     "step": 450,
+     "loss": 1.573212
+    },
+    {
+     "step": 500,
+     "loss": 1.573212
+    },
+    {
+     "step": 550,
+     "loss": 1.573212
+    },
+    {
+     "step": 600,
+     "loss": 1.573212
+    },
+    {
+     "step": 650,
+     "loss": 1.573212
+    },
+    {
+     "step": 700,
+     "loss": 1.573212
+    },
+    {
+     "step": 750,
+     "loss": 1.573212
+    },
+    {
+     "step": 800,
+     "loss": 1.573212
+    }
+   ],
+   "seconds": 132.943,
+   "mean_max_prob": 0.235866,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.32,
+   "kl_meanpred_uniform": 0.065689,
+   "kl_persample_mean": 0.124771,
+   "mean_entropy": 1.954671,
+   "z_var_per_qubit": [
+    0.028008891219070554,
+    0.014491811825429855,
+    0.0354326883738241,
+    0.013277902183147417,
+    0.01812248271714857
+   ],
+   "z_var_mean": 0.021867,
+   "z_absmean": 0.157847,
+   "mean_purity": 0.131767,
+   "pred_class_counts": [
+    3,
+    78,
+    62,
+    61,
+    0,
+    0,
+    0,
+    96
+   ],
+   "test_acc": 0.296667,
+   "ece": 0.098988,
+   "nll": 1.849953,
+   "brier": 0.810166
+  },
+  {
+   "arm": "C_dephase_end",
+   "label": "C 去相位（電路尾端，測量前）",
+   "kind": "dephase",
+   "pos": 2,
+   "seed": 168,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": null,
+   "train_acc": 0.4125,
+   "train_ece": 0.143176,
+   "train_nll": 1.62675,
+   "train_loss": 1.62675,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.636083
+    },
+    {
+     "step": 100,
+     "loss": 1.626811
+    },
+    {
+     "step": 150,
+     "loss": 1.626751
+    },
+    {
+     "step": 200,
+     "loss": 1.62675
+    },
+    {
+     "step": 250,
+     "loss": 1.62675
+    },
+    {
+     "step": 300,
+     "loss": 1.62675
+    },
+    {
+     "step": 350,
+     "loss": 1.62675
+    },
+    {
+     "step": 400,
+     "loss": 1.62675
+    },
+    {
+     "step": 450,
+     "loss": 1.62675
+    },
+    {
+     "step": 500,
+     "loss": 1.62675
+    },
+    {
+     "step": 550,
+     "loss": 1.62675
+    },
+    {
+     "step": 600,
+     "loss": 1.62675
+    },
+    {
+     "step": 650,
+     "loss": 1.62675
+    },
+    {
+     "step": 700,
+     "loss": 1.62675
+    },
+    {
+     "step": 750,
+     "loss": 1.62675
+    },
+    {
+     "step": 800,
+     "loss": 1.62675
+    }
+   ],
+   "seconds": 102.202,
+   "mean_max_prob": 0.250766,
+   "n_distinct_classes": 5,
+   "majority_frac": 0.383333,
+   "kl_meanpred_uniform": 0.092641,
+   "kl_persample_mean": 0.167618,
+   "mean_entropy": 1.911824,
+   "z_var_per_qubit": [
+    0.011474815591090575,
+    0.0956780407192548,
+    0.0031473192854798086,
+    0.018915128926274637,
+    0.028505201121930435
+   ],
+   "z_var_mean": 0.031544,
+   "z_absmean": 0.221904,
+   "mean_purity": 0.1129,
+   "pred_class_counts": [
+    85,
+    3,
+    115,
+    35,
+    0,
+    0,
+    0,
+    62
+   ],
+   "test_acc": 0.406667,
+   "ece": 0.1559,
+   "nll": 1.883454,
+   "brier": 0.813978
+  },
+  {
+   "arm": "D_depolar_front",
+   "label": "D 退極化（等純度，同 B 位置）",
+   "kind": "depolarize",
+   "pos": 0,
+   "seed": 7,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": 0.565651633817879,
+   "train_acc": 0.3375,
+   "train_ece": 0.180421,
+   "train_nll": 1.951064,
+   "train_loss": 1.951064,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.952319
+    },
+    {
+     "step": 100,
+     "loss": 1.951078
+    },
+    {
+     "step": 150,
+     "loss": 1.951064
+    },
+    {
+     "step": 200,
+     "loss": 1.951064
+    },
+    {
+     "step": 250,
+     "loss": 1.951064
+    },
+    {
+     "step": 300,
+     "loss": 1.951064
+    },
+    {
+     "step": 350,
+     "loss": 1.951064
+    },
+    {
+     "step": 400,
+     "loss": 1.951064
+    },
+    {
+     "step": 450,
+     "loss": 1.951064
+    },
+    {
+     "step": 500,
+     "loss": 1.951064
+    },
+    {
+     "step": 550,
+     "loss": 1.951064
+    },
+    {
+     "step": 600,
+     "loss": 1.951064
+    },
+    {
+     "step": 650,
+     "loss": 1.951064
+    },
+    {
+     "step": 700,
+     "loss": 1.951064
+    },
+    {
+     "step": 750,
+     "loss": 1.951064
+    },
+    {
+     "step": 800,
+     "loss": 1.951064
+    }
+   ],
+   "seconds": 105.343,
+   "mean_max_prob": 0.151073,
+   "n_distinct_classes": 6,
+   "majority_frac": 0.426667,
+   "kl_meanpred_uniform": 0.00646,
+   "kl_persample_mean": 0.009509,
+   "mean_entropy": 2.069932,
+   "z_var_per_qubit": [
+    0.0014054388645184488,
+    0.004021541627409324,
+    0.00010530235749596798,
+    0.0014982805633025377,
+    0.0018099824918142507
+   ],
+   "z_var_mean": 0.001768,
+   "z_absmean": 0.066368,
+   "mean_purity": 0.074154,
+   "pred_class_counts": [
+    2,
+    87,
+    128,
+    78,
+    0,
+    1,
+    0,
+    4
+   ],
+   "test_acc": 0.263333,
+   "ece": 0.112261,
+   "nll": 2.019923,
+   "brier": 0.85936
+  },
+  {
+   "arm": "D_depolar_front",
+   "label": "D 退極化（等純度，同 B 位置）",
+   "kind": "depolarize",
+   "pos": 0,
+   "seed": 21,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": 0.565651633817879,
+   "train_acc": 0.3375,
+   "train_ece": 0.180421,
+   "train_nll": 1.951064,
+   "train_loss": 1.951066,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.951873
+    },
+    {
+     "step": 100,
+     "loss": 1.951073
+    },
+    {
+     "step": 150,
+     "loss": 1.951064
+    },
+    {
+     "step": 200,
+     "loss": 1.951064
+    },
+    {
+     "step": 250,
+     "loss": 1.951064
+    },
+    {
+     "step": 300,
+     "loss": 1.951064
+    },
+    {
+     "step": 350,
+     "loss": 1.951064
+    },
+    {
+     "step": 400,
+     "loss": 1.951064
+    },
+    {
+     "step": 450,
+     "loss": 1.951064
+    },
+    {
+     "step": 500,
+     "loss": 1.951064
+    },
+    {
+     "step": 550,
+     "loss": 1.951064
+    },
+    {
+     "step": 600,
+     "loss": 1.951064
+    },
+    {
+     "step": 650,
+     "loss": 1.951064
+    },
+    {
+     "step": 700,
+     "loss": 1.951064
+    },
+    {
+     "step": 750,
+     "loss": 1.951064
+    },
+    {
+     "step": 800,
+     "loss": 1.951066
+    }
+   ],
+   "seconds": 103.691,
+   "mean_max_prob": 0.151073,
+   "n_distinct_classes": 6,
+   "majority_frac": 0.426667,
+   "kl_meanpred_uniform": 0.00646,
+   "kl_persample_mean": 0.009509,
+   "mean_entropy": 2.069932,
+   "z_var_per_qubit": [
+    0.0014054687421372646,
+    0.004021500138428414,
+    0.00010530206789514815,
+    0.0014982887755819855,
+    0.001809987474734945
+   ],
+   "z_var_mean": 0.001768,
+   "z_absmean": 0.066368,
+   "mean_purity": 0.074154,
+   "pred_class_counts": [
+    2,
+    87,
+    128,
+    78,
+    0,
+    1,
+    0,
+    4
+   ],
+   "test_acc": 0.263333,
+   "ece": 0.112261,
+   "nll": 2.019923,
+   "brier": 0.85936
+  },
+  {
+   "arm": "D_depolar_front",
+   "label": "D 退極化（等純度，同 B 位置）",
+   "kind": "depolarize",
+   "pos": 0,
+   "seed": 42,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": 0.565651633817879,
+   "train_acc": 0.3375,
+   "train_ece": 0.180421,
+   "train_nll": 1.951064,
+   "train_loss": 1.951064,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.963963
+    },
+    {
+     "step": 100,
+     "loss": 1.95114
+    },
+    {
+     "step": 150,
+     "loss": 1.951064
+    },
+    {
+     "step": 200,
+     "loss": 1.951064
+    },
+    {
+     "step": 250,
+     "loss": 1.951064
+    },
+    {
+     "step": 300,
+     "loss": 1.951064
+    },
+    {
+     "step": 350,
+     "loss": 1.951064
+    },
+    {
+     "step": 400,
+     "loss": 1.951064
+    },
+    {
+     "step": 450,
+     "loss": 1.951064
+    },
+    {
+     "step": 500,
+     "loss": 1.951064
+    },
+    {
+     "step": 550,
+     "loss": 1.951064
+    },
+    {
+     "step": 600,
+     "loss": 1.951064
+    },
+    {
+     "step": 650,
+     "loss": 1.951064
+    },
+    {
+     "step": 700,
+     "loss": 1.951064
+    },
+    {
+     "step": 750,
+     "loss": 1.951064
+    },
+    {
+     "step": 800,
+     "loss": 1.951064
+    }
+   ],
+   "seconds": 103.714,
+   "mean_max_prob": 0.151073,
+   "n_distinct_classes": 6,
+   "majority_frac": 0.426667,
+   "kl_meanpred_uniform": 0.00646,
+   "kl_persample_mean": 0.009509,
+   "mean_entropy": 2.069932,
+   "z_var_per_qubit": [
+    0.00140543886451845,
+    0.004021541627409322,
+    0.00010530235749596789,
+    0.001498280563302539,
+    0.00180998249181425
+   ],
+   "z_var_mean": 0.001768,
+   "z_absmean": 0.066368,
+   "mean_purity": 0.074154,
+   "pred_class_counts": [
+    2,
+    87,
+    128,
+    78,
+    0,
+    1,
+    0,
+    4
+   ],
+   "test_acc": 0.263333,
+   "ece": 0.112261,
+   "nll": 2.019923,
+   "brier": 0.85936
+  },
+  {
+   "arm": "D_depolar_front",
+   "label": "D 退極化（等純度，同 B 位置）",
+   "kind": "depolarize",
+   "pos": 0,
+   "seed": 84,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": 0.565651633817879,
+   "train_acc": 0.3375,
+   "train_ece": 0.180421,
+   "train_nll": 1.951064,
+   "train_loss": 1.951064,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.953199
+    },
+    {
+     "step": 100,
+     "loss": 1.951079
+    },
+    {
+     "step": 150,
+     "loss": 1.951064
+    },
+    {
+     "step": 200,
+     "loss": 1.951064
+    },
+    {
+     "step": 250,
+     "loss": 1.951064
+    },
+    {
+     "step": 300,
+     "loss": 1.951064
+    },
+    {
+     "step": 350,
+     "loss": 1.951064
+    },
+    {
+     "step": 400,
+     "loss": 1.951064
+    },
+    {
+     "step": 450,
+     "loss": 1.951064
+    },
+    {
+     "step": 500,
+     "loss": 1.951064
+    },
+    {
+     "step": 550,
+     "loss": 1.951064
+    },
+    {
+     "step": 600,
+     "loss": 1.951064
+    },
+    {
+     "step": 650,
+     "loss": 1.951064
+    },
+    {
+     "step": 700,
+     "loss": 1.951064
+    },
+    {
+     "step": 750,
+     "loss": 1.951064
+    },
+    {
+     "step": 800,
+     "loss": 1.951064
+    }
+   ],
+   "seconds": 105.287,
+   "mean_max_prob": 0.151073,
+   "n_distinct_classes": 6,
+   "majority_frac": 0.426667,
+   "kl_meanpred_uniform": 0.00646,
+   "kl_persample_mean": 0.009509,
+   "mean_entropy": 2.069932,
+   "z_var_per_qubit": [
+    0.0014054388645184498,
+    0.004021541627409326,
+    0.0001053023574959679,
+    0.0014982805633025399,
+    0.0018099824918142507
+   ],
+   "z_var_mean": 0.001768,
+   "z_absmean": 0.066368,
+   "mean_purity": 0.074154,
+   "pred_class_counts": [
+    2,
+    87,
+    128,
+    78,
+    0,
+    1,
+    0,
+    4
+   ],
+   "test_acc": 0.263333,
+   "ece": 0.112261,
+   "nll": 2.019923,
+   "brier": 0.85936
+  },
+  {
+   "arm": "D_depolar_front",
+   "label": "D 退極化（等純度，同 B 位置）",
+   "kind": "depolarize",
+   "pos": 0,
+   "seed": 168,
+   "depth": 2,
+   "n_qubit": 5,
+   "n_trainable": 20,
+   "p_depolarizing": 0.565651633817879,
+   "train_acc": 0.3375,
+   "train_ece": 0.180421,
+   "train_nll": 1.951064,
+   "train_loss": 1.951064,
+   "loss_history": [
+    {
+     "step": 50,
+     "loss": 1.952481
+    },
+    {
+     "step": 100,
+     "loss": 1.951078
+    },
+    {
+     "step": 150,
+     "loss": 1.951064
+    },
+    {
+     "step": 200,
+     "loss": 1.951064
+    },
+    {
+     "step": 250,
+     "loss": 1.951064
+    },
+    {
+     "step": 300,
+     "loss": 1.951064
+    },
+    {
+     "step": 350,
+     "loss": 1.951064
+    },
+    {
+     "step": 400,
+     "loss": 1.951064
+    },
+    {
+     "step": 450,
+     "loss": 1.951064
+    },
+    {
+     "step": 500,
+     "loss": 1.951064
+    },
+    {
+     "step": 550,
+     "loss": 1.951064
+    },
+    {
+     "step": 600,
+     "loss": 1.951064
+    },
+    {
+     "step": 650,
+     "loss": 1.951064
+    },
+    {
+     "step": 700,
+     "loss": 1.951064
+    },
+    {
+     "step": 750,
+     "loss": 1.951064
+    },
+    {
+     "step": 800,
+     "loss": 1.951064
+    }
+   ],
+   "seconds": 110.735,
+   "mean_max_prob": 0.151073,
+   "n_distinct_classes": 6,
+   "majority_frac": 0.426667,
+   "kl_meanpred_uniform": 0.00646,
+   "kl_persample_mean": 0.009509,
+   "mean_entropy": 2.069932,
+   "z_var_per_qubit": [
+    0.00140543886451845,
+    0.004021541627409325,
+    0.00010530235749596816,
+    0.0014982805633025399,
+    0.0018099824918142496
+   ],
+   "z_var_mean": 0.001768,
+   "z_absmean": 0.066368,
+   "mean_purity": 0.074154,
+   "pred_class_counts": [
+    2,
+    87,
+    128,
+    78,
+    0,
+    1,
+    0,
+    4
+   ],
+   "test_acc": 0.263333,
+   "ece": 0.112261,
+   "nll": 2.019923,
+   "brier": 0.85936
+  }
+ ],
+ "aggregate": {
+  "A_baseline": {
+   "train_acc": {
+    "mean": 0.4225,
+    "std": 0.0055901699437494795,
+    "values": [
+     0.425,
+     0.425,
+     0.425,
+     0.425,
+     0.4125
+    ]
+   },
+   "train_ece": {
+    "mean": 0.1388242,
+    "std": 0.009262975558642047,
+    "values": [
+     0.132576,
+     0.132576,
+     0.153217,
+     0.132576,
+     0.143176
+    ]
+   },
+   "train_nll": {
+    "mean": 1.5853439999999999,
+    "std": 0.023351194873068006,
+    "values": [
+     1.573212,
+     1.573212,
+     1.580334,
+     1.573212,
+     1.62675
+    ]
+   },
+   "test_acc": {
+    "mean": 0.320667,
+    "std": 0.04827007354458867,
+    "values": [
+     0.296667,
+     0.296667,
+     0.306667,
+     0.296667,
+     0.406667
+    ]
+   },
+   "ece": {
+    "mean": 0.10789699999999999,
+    "std": 0.02736360277814309,
+    "values": [
+     0.098988,
+     0.098988,
+     0.086621,
+     0.098988,
+     0.1559
+    ]
+   },
+   "nll": {
+    "mean": 1.8509993999999999,
+    "std": 0.02188594638803628,
+    "values": [
+     1.849953,
+     1.849953,
+     1.821684,
+     1.849953,
+     1.883454
+    ]
+   },
+   "brier": {
+    "mean": 0.810355,
+    "std": 0.0023755224688476353,
+    "values": [
+     0.810166,
+     0.810166,
+     0.807299,
+     0.810166,
+     0.813978
+    ]
+   },
+   "mean_max_prob": {
+    "mean": 0.2356818,
+    "std": 0.010864441918478832,
+    "values": [
+     0.235866,
+     0.235866,
+     0.220045,
+     0.235866,
+     0.250766
+    ]
+   },
+   "n_distinct_classes": {
+    "mean": 5.4,
+    "std": 0.8944271909999159,
+    "values": [
+     5.0,
+     5.0,
+     7.0,
+     5.0,
+     5.0
+    ]
+   },
+   "majority_frac": {
+    "mean": 0.36733319999999997,
+    "std": 0.07558643837819057,
+    "values": [
+     0.32,
+     0.32,
+     0.493333,
+     0.32,
+     0.383333
+    ]
+   },
+   "kl_meanpred_uniform": {
+    "mean": 0.06522019999999999,
+    "std": 0.019897029004351377,
+    "values": [
+     0.065689,
+     0.065689,
+     0.036393,
+     0.065689,
+     0.092641
+    ]
+   },
+   "kl_persample_mean": {
+    "mean": 0.128666,
+    "std": 0.024011771425698682,
+    "values": [
+     0.124771,
+     0.124771,
+     0.101399,
+     0.124771,
+     0.167618
+    ]
+   },
+   "mean_entropy": {
+    "mean": 1.9507758,
+    "std": 0.024011487536177385,
+    "values": [
+     1.954671,
+     1.954671,
+     1.978042,
+     1.954671,
+     1.911824
+    ]
+   },
+   "z_var_mean": {
+    "mean": 0.0225726,
+    "std": 0.0056781417118631355,
+    "values": [
+     0.021867,
+     0.021867,
+     0.015718,
+     0.021867,
+     0.031544
+    ]
+   },
+   "z_absmean": {
+    "mean": 0.170423,
+    "std": 0.028783266397335798,
+    "values": [
+     0.157847,
+     0.157847,
+     0.15667,
+     0.157847,
+     0.221904
+    ]
+   },
+   "mean_purity": {
+    "mean": 1.0,
+    "std": 0.0,
+    "values": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "seconds": {
+    "mean": 129.5888,
+    "std": 15.553104857230268,
+    "values": [
+     123.354,
+     106.656,
+     130.999,
+     146.259,
+     140.676
+    ]
+   },
+   "label": "A 無通道（全量子）"
+  },
+  "B_dephase_front": {
+   "train_acc": {
+    "mean": 0.25,
+    "std": 0.0,
+    "values": [
+     0.25,
+     0.25,
+     0.25,
+     0.25,
+     0.25
+    ]
+   },
+   "train_ece": {
+    "mean": 0.109237,
+    "std": 0.0,
+    "values": [
+     0.109237,
+     0.109237,
+     0.109237,
+     0.109237,
+     0.109237
+    ]
+   },
+   "train_nll": {
+    "mean": 2.024285,
+    "std": 0.0,
+    "values": [
+     2.024285,
+     2.024285,
+     2.024285,
+     2.024285,
+     2.024285
+    ]
+   },
+   "test_acc": {
+    "mean": 0.23000000000000004,
+    "std": 3.1031676915590914e-17,
+    "values": [
+     0.23,
+     0.23,
+     0.23,
+     0.23,
+     0.23
+    ]
+   },
+   "ece": {
+    "mean": 0.099276,
+    "std": 0.0,
+    "values": [
+     0.099276,
+     0.099276,
+     0.099276,
+     0.099276,
+     0.099276
+    ]
+   },
+   "nll": {
+    "mean": 2.055836,
+    "std": 0.0,
+    "values": [
+     2.055836,
+     2.055836,
+     2.055836,
+     2.055836,
+     2.055836
+    ]
+   },
+   "brier": {
+    "mean": 0.869044,
+    "std": 0.0,
+    "values": [
+     0.869044,
+     0.869044,
+     0.869044,
+     0.869044,
+     0.869044
+    ]
+   },
+   "mean_max_prob": {
+    "mean": 0.130724,
+    "std": 0.0,
+    "values": [
+     0.130724,
+     0.130724,
+     0.130724,
+     0.130724,
+     0.130724
+    ]
+   },
+   "n_distinct_classes": {
+    "mean": 8.0,
+    "std": 0.0,
+    "values": [
+     8.0,
+     8.0,
+     8.0,
+     8.0,
+     8.0
+    ]
+   },
+   "majority_frac": {
+    "mean": 0.196667,
+    "std": 0.0,
+    "values": [
+     0.196667,
+     0.196667,
+     0.196667,
+     0.196667,
+     0.196667
+    ]
+   },
+   "kl_meanpred_uniform": {
+    "mean": 0.0,
+    "std": 0.0,
+    "values": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "kl_persample_mean": {
+    "mean": 0.001144,
+    "std": 0.0,
+    "values": [
+     0.001144,
+     0.001144,
+     0.001144,
+     0.001144,
+     0.001144
+    ]
+   },
+   "mean_entropy": {
+    "mean": 2.078297,
+    "std": 0.0,
+    "values": [
+     2.078297,
+     2.078297,
+     2.078297,
+     2.078297,
+     2.078297
+    ]
+   },
+   "z_var_mean": {
+    "mean": 0.00011100000000000001,
+    "std": 1.5152185993940876e-20,
+    "values": [
+     0.000111,
+     0.000111,
+     0.000111,
+     0.000111,
+     0.000111
+    ]
+   },
+   "z_absmean": {
+    "mean": 0.003601,
+    "std": 0.0,
+    "values": [
+     0.003601,
+     0.003601,
+     0.003601,
+     0.003601,
+     0.003601
+    ]
+   },
+   "mean_purity": {
+    "mean": 0.044936,
+    "std": 0.0,
+    "values": [
+     0.044936,
+     0.044936,
+     0.044936,
+     0.044936,
+     0.044936
+    ]
+   },
+   "seconds": {
+    "mean": 119.46880000000002,
+    "std": 13.360653322349169,
+    "values": [
+     136.89,
+     113.16,
+     105.664,
+     111.42,
+     130.21
+    ]
+   },
+   "label": "B 去相位（編碼層後）"
+  },
+  "C_dephase_end": {
+   "train_acc": {
+    "mean": 0.4225,
+    "std": 0.0055901699437494795,
+    "values": [
+     0.425,
+     0.425,
+     0.425,
+     0.425,
+     0.4125
+    ]
+   },
+   "train_ece": {
+    "mean": 0.1388242,
+    "std": 0.009262975558642047,
+    "values": [
+     0.132576,
+     0.132576,
+     0.153217,
+     0.132576,
+     0.143176
+    ]
+   },
+   "train_nll": {
+    "mean": 1.5853439999999999,
+    "std": 0.023351194873068006,
+    "values": [
+     1.573212,
+     1.573212,
+     1.580334,
+     1.573212,
+     1.62675
+    ]
+   },
+   "test_acc": {
+    "mean": 0.320667,
+    "std": 0.04827007354458867,
+    "values": [
+     0.296667,
+     0.296667,
+     0.306667,
+     0.296667,
+     0.406667
+    ]
+   },
+   "ece": {
+    "mean": 0.10789699999999999,
+    "std": 0.02736360277814309,
+    "values": [
+     0.098988,
+     0.098988,
+     0.086621,
+     0.098988,
+     0.1559
+    ]
+   },
+   "nll": {
+    "mean": 1.8509993999999999,
+    "std": 0.02188594638803628,
+    "values": [
+     1.849953,
+     1.849953,
+     1.821684,
+     1.849953,
+     1.883454
+    ]
+   },
+   "brier": {
+    "mean": 0.810355,
+    "std": 0.0023755224688476353,
+    "values": [
+     0.810166,
+     0.810166,
+     0.807299,
+     0.810166,
+     0.813978
+    ]
+   },
+   "mean_max_prob": {
+    "mean": 0.2356818,
+    "std": 0.010864441918478832,
+    "values": [
+     0.235866,
+     0.235866,
+     0.220045,
+     0.235866,
+     0.250766
+    ]
+   },
+   "n_distinct_classes": {
+    "mean": 5.4,
+    "std": 0.8944271909999159,
+    "values": [
+     5.0,
+     5.0,
+     7.0,
+     5.0,
+     5.0
+    ]
+   },
+   "majority_frac": {
+    "mean": 0.36733319999999997,
+    "std": 0.07558643837819057,
+    "values": [
+     0.32,
+     0.32,
+     0.493333,
+     0.32,
+     0.383333
+    ]
+   },
+   "kl_meanpred_uniform": {
+    "mean": 0.06522019999999999,
+    "std": 0.019897029004351377,
+    "values": [
+     0.065689,
+     0.065689,
+     0.036393,
+     0.065689,
+     0.092641
+    ]
+   },
+   "kl_persample_mean": {
+    "mean": 0.128666,
+    "std": 0.024011771425698682,
+    "values": [
+     0.124771,
+     0.124771,
+     0.101399,
+     0.124771,
+     0.167618
+    ]
+   },
+   "mean_entropy": {
+    "mean": 1.9507758,
+    "std": 0.024011487536177385,
+    "values": [
+     1.954671,
+     1.954671,
+     1.978042,
+     1.954671,
+     1.911824
+    ]
+   },
+   "z_var_mean": {
+    "mean": 0.0225726,
+    "std": 0.0056781417118631355,
+    "values": [
+     0.021867,
+     0.021867,
+     0.015718,
+     0.021867,
+     0.031544
+    ]
+   },
+   "z_absmean": {
+    "mean": 0.170423,
+    "std": 0.028783266397335798,
+    "values": [
+     0.157847,
+     0.157847,
+     0.15667,
+     0.157847,
+     0.221904
+    ]
+   },
+   "mean_purity": {
+    "mean": 0.12297,
+    "std": 0.012246852330292874,
+    "values": [
+     0.131767,
+     0.131767,
+     0.106649,
+     0.131767,
+     0.1129
+    ]
+   },
+   "seconds": {
+    "mean": 132.30180000000001,
+    "std": 18.42759815331341,
+    "values": [
+     139.909,
+     152.039,
+     134.416,
+     132.943,
+     102.202
+    ]
+   },
+   "label": "C 去相位（電路尾端，測量前）"
+  },
+  "D_depolar_front": {
+   "train_acc": {
+    "mean": 0.3375,
+    "std": 0.0,
+    "values": [
+     0.3375,
+     0.3375,
+     0.3375,
+     0.3375,
+     0.3375
+    ]
+   },
+   "train_ece": {
+    "mean": 0.180421,
+    "std": 0.0,
+    "values": [
+     0.180421,
+     0.180421,
+     0.180421,
+     0.180421,
+     0.180421
+    ]
+   },
+   "train_nll": {
+    "mean": 1.951064,
+    "std": 0.0,
+    "values": [
+     1.951064,
+     1.951064,
+     1.951064,
+     1.951064,
+     1.951064
+    ]
+   },
+   "test_acc": {
+    "mean": 0.263333,
+    "std": 0.0,
+    "values": [
+     0.263333,
+     0.263333,
+     0.263333,
+     0.263333,
+     0.263333
+    ]
+   },
+   "ece": {
+    "mean": 0.11226099999999999,
+    "std": 1.5515838457795457e-17,
+    "values": [
+     0.112261,
+     0.112261,
+     0.112261,
+     0.112261,
+     0.112261
+    ]
+   },
+   "nll": {
+    "mean": 2.019923,
+    "std": 0.0,
+    "values": [
+     2.019923,
+     2.019923,
+     2.019923,
+     2.019923,
+     2.019923
+    ]
+   },
+   "brier": {
+    "mean": 0.85936,
+    "std": 0.0,
+    "values": [
+     0.85936,
+     0.85936,
+     0.85936,
+     0.85936,
+     0.85936
+    ]
+   },
+   "mean_max_prob": {
+    "mean": 0.151073,
+    "std": 0.0,
+    "values": [
+     0.151073,
+     0.151073,
+     0.151073,
+     0.151073,
+     0.151073
+    ]
+   },
+   "n_distinct_classes": {
+    "mean": 6.0,
+    "std": 0.0,
+    "values": [
+     6.0,
+     6.0,
+     6.0,
+     6.0,
+     6.0
+    ]
+   },
+   "majority_frac": {
+    "mean": 0.426667,
+    "std": 0.0,
+    "values": [
+     0.426667,
+     0.426667,
+     0.426667,
+     0.426667,
+     0.426667
+    ]
+   },
+   "kl_meanpred_uniform": {
+    "mean": 0.006459999999999999,
+    "std": 9.69739903612216e-19,
+    "values": [
+     0.00646,
+     0.00646,
+     0.00646,
+     0.00646,
+     0.00646
+    ]
+   },
+   "kl_persample_mean": {
+    "mean": 0.009509,
+    "std": 0.0,
+    "values": [
+     0.009509,
+     0.009509,
+     0.009509,
+     0.009509,
+     0.009509
+    ]
+   },
+   "mean_entropy": {
+    "mean": 2.069932,
+    "std": 0.0,
+    "values": [
+     2.069932,
+     2.069932,
+     2.069932,
+     2.069932,
+     2.069932
+    ]
+   },
+   "z_var_mean": {
+    "mean": 0.001768,
+    "std": 0.0,
+    "values": [
+     0.001768,
+     0.001768,
+     0.001768,
+     0.001768,
+     0.001768
+    ]
+   },
+   "z_absmean": {
+    "mean": 0.066368,
+    "std": 0.0,
+    "values": [
+     0.066368,
+     0.066368,
+     0.066368,
+     0.066368,
+     0.066368
+    ]
+   },
+   "mean_purity": {
+    "mean": 0.074154,
+    "std": 0.0,
+    "values": [
+     0.074154,
+     0.074154,
+     0.074154,
+     0.074154,
+     0.074154
+    ]
+   },
+   "seconds": {
+    "mean": 105.75399999999999,
+    "std": 2.8989196263435786,
+    "values": [
+     105.343,
+     103.691,
+     103.714,
+     105.287,
+     110.735
+    ]
+   },
+   "label": "D 退極化（等純度，同 B 位置）"
+  }
+ },
+ "paired_B_minus_A": {
+  "test_acc": {
+   "mean": -0.09066700000000001,
+   "ci95_half": 0.05993521251096383,
+   "std": 0.04827007354458867,
+   "sig": true
+  },
+  "ece": {
+   "mean": -0.008621000000000004,
+   "ci95_half": 0.033976400430768834,
+   "std": 0.02736360277814309,
+   "sig": false
+  },
+  "nll": {
+   "mean": 0.20483660000000023,
+   "ci95_half": 0.02717499169664241,
+   "std": 0.02188594638803628,
+   "sig": true
+  },
+  "mean_max_prob": {
+   "mean": -0.10495779999999999,
+   "ci95_half": 0.013489986390751026,
+   "std": 0.010864441918478832,
+   "sig": true
+  },
+  "n_distinct_classes": {
+   "mean": 2.6,
+   "ci95_half": 1.1105780420791194,
+   "std": 0.8944271909999159,
+   "sig": true
+  },
+  "majority_frac": {
+   "mean": -0.1706662,
+   "ci95_half": 0.0938529592866467,
+   "std": 0.07558643837819055,
+   "sig": true
+  },
+  "kl_meanpred_uniform": {
+   "mean": -0.06522019999999999,
+   "ci95_half": 0.024705424585919237,
+   "std": 0.019897029004351377,
+   "sig": true
+  },
+  "kl_persample_mean": {
+   "mean": -0.127522,
+   "ci95_half": 0.02981455211238798,
+   "std": 0.024011771425698682,
+   "sig": true
+  },
+  "z_var_mean": {
+   "mean": -0.0224616,
+   "ci95_half": 0.007050344140319559,
+   "std": 0.0056781417118631355,
+   "sig": true
+  },
+  "mean_purity": {
+   "mean": -0.9550639999999999,
+   "ci95_half": 1.5412366411992055e-16,
+   "std": 1.2412670766236366e-16,
+   "sig": true
+  }
+ },
+ "paired_D_minus_B": {
+  "test_acc": {
+   "mean": 0.033332999999999974,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "ece": {
+   "mean": 0.012984999999999997,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "nll": {
+   "mean": -0.035913000000000306,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "mean_max_prob": {
+   "mean": 0.020349000000000006,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "n_distinct_classes": {
+   "mean": -2.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "majority_frac": {
+   "mean": 0.23000000000000004,
+   "ci95_half": 3.853091602998014e-17,
+   "std": 3.1031676915590914e-17,
+   "sig": true
+  },
+  "kl_meanpred_uniform": {
+   "mean": 0.006459999999999999,
+   "ci95_half": 1.2040911259368793e-18,
+   "std": 9.69739903612216e-19,
+   "sig": true
+  },
+  "kl_persample_mean": {
+   "mean": 0.008365000000000001,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "z_var_mean": {
+   "mean": 0.001657,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "mean_purity": {
+   "mean": 0.029218,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  }
+ },
+ "paired_C_minus_A": {
+  "test_acc": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "ece": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "nll": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "mean_max_prob": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "n_distinct_classes": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "majority_frac": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "kl_meanpred_uniform": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "kl_persample_mean": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "z_var_mean": {
+   "mean": 0.0,
+   "ci95_half": 0.0,
+   "std": 0.0,
+   "sig": false
+  },
+  "mean_purity": {
+   "mean": -0.8770300000000001,
+   "ci95_half": 0.015206475629842543,
+   "std": 0.012246852330292858,
+   "sig": true
+  }
+ },
+ "verdict": {
+  "B_vs_A_ece_improves": false,
+  "B_vs_A_collapse_signals": {
+   "mean_max_prob": false,
+   "n_distinct_classes": false,
+   "majority_frac": false,
+   "kl_meanpred_uniform": false,
+   "z_var_mean": true
+  },
+  "B_vs_A_collapse_any": true,
+  "RQ2_rule1": "ECE 未顯著改善，或未伴隨塌縮惡化 => 規則 1 不觸發",
+  "D_vs_B_within_noise": {
+   "test_acc": false,
+   "ece": false,
+   "nll": false
+  },
+  "H2_rule2": "D 與 B 至少一項指標有顯著差異 => 規則 2 不觸發",
+  "arm_C_equals_A_max_abs_metric_diff": 0.8770300000000001
+ },
+ "total_seconds": 2440.0
+}
