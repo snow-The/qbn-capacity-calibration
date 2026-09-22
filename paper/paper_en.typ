@@ -1128,8 +1128,8 @@ free access to quantum hardware.
 *Xin Yang* designed the study and built the end-to-end pipeline: the CUDA-Q and
 NumPy circuit implementations and the cross-validation between them, the capacity
 scan and the calibration ablation, the hardware submission and analysis code that
-produced the measurements on Tuna-17, the numerical verification of the theory,
-and the Lean 4 formalisation in `formal/Dephasing.lean`.
+produced the measurements on Tuna-17, and the Lean 4 formalisation in
+`formal/Dephasing.lean`.
 *Poyuan Chung* developed the theoretical analysis of Section 3 on which the whole
 study rests: the quantum-channel formalism used throughout; the definition of
 monomial matrices and the proof of Lemma 1; the commutation theorem (Theorem 1)
@@ -1140,8 +1140,9 @@ that violate it, and the sharpening that $R_Z$ does not; the terminal-dephasing
 theorem (Theorem 2), which proves that dephasing inserted after the last
 non-monomial gate is invisible to computational-basis measurement; the minimal
 single-qubit counterexample showing that the order of rotation and dephasing
-decides whether information survives at all; and the constraints this places on
-where the ablation must be inserted for the experiment to be informative.
+decides whether information survives at all; the independent numerical
+verification of every proposition above; and the constraints this places on where
+the ablation must be inserted for the experiment to be informative.
 *Yuan-Liang Zhong* supervised the work and reviewed the manuscript. All authors
 discussed the results and approved the final manuscript.
 
