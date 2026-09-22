@@ -245,14 +245,15 @@ def fix_refs(tex: str, word_fig: str, word_tbl: str) -> str:
 
 
 def fix_label_placement(tex: str) -> str:
-    """pandoc 把標籤放在 figure 環境外面（phantomsection + label）。
-    搬進 figure 內部，避免 \\ref 依賴「目前計數器」這種脆弱假設。"""
-    pat = re.compile(re.escape(B + "end{figure}") + "[ ]*" + chr(10) + "[ ]*" +
+    """pandoc 把標籤放在 figure/table 環境外面（phantomsection + label）。
+    搬進環境內部，否則 \ref 會依賴「目前計數器」而回報節號。
+    注意：計數器從 1 開始，相同標籤只能出現一次。"""
+    pat = re.compile(re.escape(B + "end{") + "(figure|table)" + re.escape("}" ) + r"\s*" +
                      re.escape(B + "protect" + B + "phantomsection" + B + "label") +
-                     "[{]([^}]+)[}]" + "[{]" + RBR + "}")
+                     r"\{([^}]+)\}\{\}" )
 
     def repl(m):
-        return B + "label{" + m.group(1) + "}" + chr(10) + B + "end{figure}"
+        return (B + "label{" + m.group(2) + "}" + chr(10) + B + "end{" + m.group(1) + "}")
 
     return pat.sub(repl, tex)
 
@@ -470,7 +471,7 @@ def build_en(keys: set) -> None:
     # 反過來的話 {[}fig{]} 會先被當成「不認得的引用鍵」而印出誤導性的警告。
     tex = fix_refs(fix_figures(to_latex(body)), "Figure", "Table")
     tex, unknown = fix_citations(tex, keys)
-    tex = fix_texttt_breaks(fix_longtable(fix_include_tokens(fix_tables(fix_label_placement(tex)))))
+    tex = fix_label_placement(fix_texttt_breaks(fix_longtable(fix_include_tokens(fix_tables(tex)))))
     if unknown:
         print("  警告：英文版有無法辨識的 {[}...{]}：", sorted(set(unknown)))
 
@@ -556,7 +557,7 @@ def build_zh(keys: set) -> None:
     body = macro_lines(src) + chr(10) + slice_between(strip_layout(src), "= 引言", "= 參考文獻")
     tex = fix_refs(fix_figures(to_latex(body)), "圖", "表")
     tex, unknown = fix_citations(tex, keys)
-    tex = fix_texttt_breaks(fix_longtable(fix_include_tokens(fix_tables(fix_label_placement(tex)))))
+    tex = fix_label_placement(fix_texttt_breaks(fix_longtable(fix_include_tokens(fix_tables(tex)))))
     if unknown:
         print("  警告：中文版有無法辨識的 {[}...{]}：", sorted(set(unknown)))
 

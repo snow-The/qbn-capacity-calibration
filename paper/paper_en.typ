@@ -791,7 +791,7 @@ The $5$-qubit ring circuit of this study has *no* one-to-one mapping onto that t
 After routing, the compiled circuits of all five arms are *identical*
 ($op("CX") = 10$, $op("SWAP") = 2$, depth $18$, $42$ gates);
 the only difference between arms A and C is five `wait` instructions -- a clean controlled comparison.
-Each arm contributes $8$ samples, $40$ circuits in total, at $8192$ shots each; the four arms are listed in @fig:hw-ablation.
+Each arm contributes $8$ samples, $40$ circuits in total, at $8192$ shots each; the four arms are listed in @tbl:hw-ablation.
 The bit order is measured rather than assumed: applying an $X$ gate to $q_0$, $q_2$ and $q_4$
 returns `00001`, `00100` and `10000` respectively, so the platform's classical bit order
 is reversed into the $q_0$-leftmost convention used here.
@@ -818,7 +818,7 @@ The null is thus $max abs(Delta P) = 0.00910 plus.minus 0.00109$ (95th percentil
 ), caption: [The four delayed arms against the undelayed arm A on Tuna-17, $8$ samples and
   $8192$ shots per arm. The ratio is with respect to the pure shot-noise null ($0.00910$).
   The largest value, $1.29$, is also the only marginal entry under a Bonferroni correction
-  across four arms ($alpha = 0.05 slash 4 = 0.0125$), and it does not survive that correction.],) <fig:hw-ablation>
+  across four arms ($alpha = 0.05 slash 4 = 0.0125$), and it does not survive that correction.],) <tbl:hw-ablation>
 
 *A same-circuit, different-time drift control.* The easiest entry in that table to
 over-read is B4 at $1.29$. Deciding whether it is physics needs a control with no variable
