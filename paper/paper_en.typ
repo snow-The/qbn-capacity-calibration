@@ -1095,6 +1095,28 @@ verified the Lean 4 formalisation in `formal/Dephasing.lean`.
 *Yuan-Liang Zhong* supervised the work and reviewed the manuscript. All authors
 discussed the results and approved the final manuscript.
 
+= Use of AI tools
+
+For transparency, and consistent with the policies of arXiv and of the journals to
+which this work may be submitted, we record the scope of our use of large language
+models in producing this work.
+
++ *Literature extraction and organisation.* Ten reference papers were converted to text
+  with an OCR pipeline, and the resulting notes were extracted and organised with the
+  assistance of a large language model.
++ *Code generation and debugging.* The CUDA-Q probe scripts, the NumPy state-vector
+  simulator and the evaluation tooling were written and debugged with the assistance of
+  a large language model.
++ *Text drafting and rewriting.* Parts of the manuscript were drafted and revised with
+  the assistance of a large language model.
++ *Figure and table generation.* The plotting and table-generation scripts were written
+  with the assistance of a large language model.
+
+No AI tool is listed as an author. Every use above was reviewed by the authors: all
+numerical results come from code the authors ran and checked, all claims were verified
+against the primary data or the cited sources, and every bibliographic entry was
+checked against the original publication. The authors take full responsibility for the
+content of this work.
 = Code and data availability
 
 Everything needed to reproduce this work is available at

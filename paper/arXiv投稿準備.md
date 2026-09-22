@@ -194,7 +194,7 @@ typst compile paper.typ          # 產生 paper.pdf
 latexmk -xelatex -g -interaction=nonstopmode -halt-on-error paper.tex
 ```
 
-**結果（2026-09-23 重測）**：`rc=0`、**18 頁**、0 overfull、0 float-too-large、
+**結果（2026-09-23 重測）**：`rc=0`、**19 頁**、0 overfull、0 float-too-large、
 0 LaTeX error、0 undefined control sequence。
 
 > ⚠️ **不要用 `latexmk -pdf`（pdflatex）來做這個驗證。**
