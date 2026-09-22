@@ -52,7 +52,7 @@
     the quantum layer classical, isolating the marginal contribution of quantumness
     to calibration; and (iii) a *hardware verification* on QuTech's Tuna-17
     superconducting processor, sweeping the delay of end-of-circuit dephasing across
-    five orders of magnitude to locate the scale at which the channel actually appears
+    five orders of magnitude to fix the delay at which a delay-induced deviation would rise above the device's own repeatability
     -- $1$--$4$ execution cycles (about $20$--$80$ ns) are far too short to realise it. Every quantum-circuit result is computed on both CUDA-Q and an
     independently implemented pure-NumPy state-vector simulator, then compared: the
     reproduction pipeline agrees to $4.16 times 10^(-17)$, the largest capacity-scan
@@ -688,9 +688,11 @@ double-precision machine epsilon); the other three are all of order $10^(-17)$.
 Beyond accuracy we report:
 negative log-likelihood (NLL), the Brier score (the mean squared error of the
 predicted probabilities against the true labels),
-expected calibration error (ECE, $M = 10$ equal-width bins) together with reliability
-diagrams (plots of claimed confidence against observed accuracy), and an uncertainty
-decomposition into predictive entropy and mutual information.
+expected calibration error (ECE, $M = 10$ equal-width bins), and two *collapse
+indicators* that matter precisely when a model degenerates into a uniform predictor---
+the mean maximum predicted probability and the KL divergence of the mean predictive
+distribution from the uniform distribution---together with the state purity measured at
+the readout.
 
 #block(inset: (x: 1em), fill: rgb("#fff4e5"), radius: 2pt)[
   *The defence point for a fair comparison*: temperature scaling (dividing the
@@ -698,6 +700,9 @@ decomposition into predictive entropy and mutual information.
   label, so it improves calibration at zero cost in accuracy.
   Any calibration advantage of the quantum layer *must beat the temperature-scaled
   baseline*, otherwise the conclusion does not hold.
+  In this work the first condition of the RQ2 rule already fails (the confidence
+  interval of the ECE change covers zero), so this comparison is never reached; the
+  criterion is stated because a *positive* calibration result would have to clear it.
 ]
 
 == Statistical protocol
@@ -738,8 +743,8 @@ Three observations:
 
 + *Depth is the dominant driver, and there is no breakdown within the scanned range.*
    Test accuracy rises with depth for every $n$, and shows no decline even at $L = 8$;
-   training accuracy rises as well (up to $0.79$). This contradicts the expectation of a
-   "capacity cliff" and equally contradicts the expectation of a barren plateau.
+   training accuracy rises as well (up to $0.89$ in the single best run, and $0.85$ as a five-seed cell mean). This contradicts the expectation of a
+   "capacity cliff" and, within that same scanned range, equally contradicts the expectation of a barren plateau.
 + *Test accuracy decreases with qubit count---for configurations in which capacity is
   genuinely used.*
    The *peak* of each $n$ (the maximum over depth) decreases monotonically from $n = 4$:
@@ -887,7 +892,7 @@ test the hardware corollary of Theorem 2.
 The next subsection raises the shot count eightfold and sweeps the delay across five orders
 of magnitude -- and the signal appears.
 
-== Hardware delay dose response
+== Delay dose response: $T_1$ relaxation and a resolvability floor
 
 Pushing the delay from $1$ execution cycle to $65536$ (about $1.3$ ms, spanning both $T_2$ and
 $T_1$) yields a logarithmic dose-response curve covering five orders of magnitude.
@@ -897,6 +902,14 @@ falls by a factor $1 slash sqrt(8) approx 0.35$. @fig:tau-curve shows the result
 A gate-by-gate comparison of the compiled circuits confirms that the gate sequence is identical
 at every $tau$ ($42$ operations in all) and that the only difference is the value of `wait`;
 $tau = 0$ is gate-for-gate identical to arm A.
+
+One point of framing has to be settled before the curve is read. The `wait` sits at the
+*tail* of the circuit, and by Theorem 2 a computational-basis dephasing channel inserted
+there is invisible to the measurement. What this sweep measures is therefore the
+device's own $T_1$ relaxation rather than the dephasing channel; its value for this study
+is to fix the *resolvability floor*---the delay at which any delay-induced deviation would
+rise above the spread the device produces on its own---and to show that the four-arm
+protocol of the previous subsection sits well below that floor.
 
 *Why delays cannot be batched together.* The idle time of `wait` is paid *once per shot*:
 a circuit's execution time is proportional to $"shots" times tau$ ($tau = 65536$ already costs
@@ -1064,7 +1077,11 @@ the device's native gate set) agrees with the golden vector (an independently
 computed reference result) to $8.88 times 10^(-16)$), and
 (ii) a set of controlled ablation designs that use the dephasing classicalisation
 operator as the sole variable *within a single model* and scan the $(Q, L)$
-two-dimensional grid under a *fixed readout rule*.
+two-dimensional grid under a *fixed readout rule*; and
+(iii) a mirror held up to the hardware, in which the delay of the same circuit is
+swept over five orders of magnitude to fix the resolvability floor at $tau = 64$
+execution cycles (about $1.3$ microseconds), showing that the four-arm protocol at
+$1$--$4$ cycles sits below the device's own repeatability.
 Prior work has established scaling protocols on each individual axis @vyskubov2026,
 and parameter-matched, calibration- and noise-aware benchmarks @gillani2026;
 what this work adds is the intersection of the two, together with dephasing as a
