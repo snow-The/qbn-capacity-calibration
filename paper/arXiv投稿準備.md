@@ -174,3 +174,24 @@ Quantum 官方要求（arXiv 目前無強制，但這是學術誠信的趨勢）
 3. **【本週】** 確認指導老師或 Poyuan 的老師是否願意、且有資格背書
 4. **【論文完成後】** 開始 arXiv 新投稿 → 取得背書碼 → 請對方背書
 5. **【上線後】** 再決定要不要投期刊拿正式 DOI
+
+---
+
+## 附錄：獨立編譯驗證要用對引擎（2026-09-22 補）
+
+驗證 `submission.zip` 能否在乾淨目錄獨立編譯時，**必須用 xelatex**，與 `build_tex.bat` 一致：
+
+```bash
+# 解壓到乾淨目錄後
+latexmk -xelatex -g -interaction=nonstopmode -halt-on-error paper.tex
+```
+
+**結果（2026-09-22 實測）**：`rc=0`、**17 頁**、0 overfull、0 float-too-large、
+0 LaTeX error、0 undefined control sequence。
+
+> ⚠️ **不要用 `latexmk -pdf`（pdflatex）來做這個驗證。**
+> pdflatex 會走 `graphicx → epstopdf-base → grfext.sty` 這條路徑；`grfext` 在 MiKTeX 是獨立套件，
+> 本機**沒安裝**，而 `mpm --install=grfext` 會因網路逾時失敗（`Sorry, but: Timeout was reached`），
+> 於是編譯會停在 `! LaTeX Error: File 'grfext.sty' not found.`。
+> **那是測試指令的問題，不是論文的問題**——arXiv 用完整 TeX Live，graphicx 的這條依賴本來就滿足。
+> 已用 xelatex 重驗通過。若哪天真的要用 pdflatex 驗，先讓 MiKTeX 連上網裝 grfext。
