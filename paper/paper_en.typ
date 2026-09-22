@@ -1134,14 +1134,12 @@ produced the measurements on Tuna-17, and the Lean 4 formalisation in
 theorem and its converse, which determine exactly which gates hide computational-basis
 dephasing and which expose it; the terminal-dephasing theorem; the counterexample that
 fixes where the ablation must sit; and the numerical verification of each proposition.
-*Yuan-Liang Zhong* supervised the work and reviewed the manuscript. All authors
-discussed the results and approved the final manuscript.
+*Yuan-Liang Zhong* supervised the research direction.
 
 = Use of AI tools
 
-For transparency, and consistent with the policies of arXiv and of the journals to
-which this work may be submitted, we record the scope of our use of large language
-models in producing this work.
+For transparency, and consistent with the policy of arXiv, we record the scope of our
+use of large language models in producing this work.
 
 + *Literature extraction and organisation.* Ten reference papers were converted to text
   with an OCR pipeline, and the resulting notes were extracted and organised with the
@@ -1154,11 +1152,8 @@ models in producing this work.
 + *Figure and table generation.* The plotting and table-generation scripts were written
   with the assistance of a large language model.
 
-No AI tool is listed as an author. Every use above was reviewed by the authors: all
-numerical results come from code the authors ran and checked, all claims were verified
-against the primary data or the cited sources, and every bibliographic entry was
-checked against the original publication. The authors take full responsibility for the
-content of this work.
+No AI tool is listed as an author. The authors take full responsibility for the content
+of this work.
 
 = Code and data availability
 
