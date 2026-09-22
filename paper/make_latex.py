@@ -484,7 +484,7 @@ def build_en(keys: set) -> None:
         B + "usepackage[utf8]{inputenc}",
         B + "usepackage[T1]{fontenc}",
         B + "usepackage{hyperref}",
-        B + "hypersetup{hidelinks}",
+        B + "hypersetup{colorlinks=true,linkcolor=black,citecolor=[rgb]{0,0.31,0.62},urlcolor=[rgb]{0,0.31,0.62}}",
         B + "usepackage{url}",
         B + "usepackage{booktabs}",
         B + "usepackage{longtable}",
@@ -523,7 +523,7 @@ def build_en(keys: set) -> None:
         B + "keywords{" + (B + "and ").join(meta["keywords"]) + "}",
         "",
     ])
-    tail = chr(10).join(["", B + "bibliographystyle{ieeetr}", B + "bibliography{refs_public}", "", B + "end{document}", ""])
+    tail = chr(10).join(["", B + "bibliographystyle{apsrev4-2}", B + "bibliography{refs_public}", "", B + "end{document}", ""])
     (HERE / "paper.tex").write_text(head + tex + tail, encoding="utf-8")
     print("  寫出 paper.tex", len(tex.splitlines()), "行正文")
 
@@ -573,7 +573,7 @@ def build_zh(keys: set) -> None:
         B + "usepackage{array}",
         B + "usepackage[numbers]{natbib}",
         B + "usepackage{hyperref}",
-        B + "hypersetup{hidelinks}",
+        B + "hypersetup{colorlinks=true,linkcolor=black,citecolor=[rgb]{0,0.31,0.62},urlcolor=[rgb]{0,0.31,0.62}}",
         "% CJK 段落常因缺少斷行點而溢出邊界；放寬斷行伸縮量（只影響間距，不影響內容）。",
         B + "emergencystretch=3em",
         "",
@@ -589,7 +589,7 @@ def build_zh(keys: set) -> None:
         B + "end{abstract}",
         "",
     ])
-    tail = chr(10).join(["", B + "bibliographystyle{ieeetr}", B + "bibliography{refs_public}", "", B + "end{document}", ""])
+    tail = chr(10).join(["", B + "bibliographystyle{apsrev4-2}", B + "bibliography{refs_public}", "", B + "end{document}", ""])
     (HERE / "paper_zh.tex").write_text(head + tex + tail, encoding="utf-8")
     print("  寫出 paper_zh.tex", len(tex.splitlines()), "行正文")
 

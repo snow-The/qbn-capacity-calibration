@@ -329,16 +329,15 @@ When $sin(theta / 2) != 0$ *and* $cos(theta / 2) != 0$ the first row contains *t
 non-zero entries, violating the definition of a monomial matrix, so $R_Y$ does not
 commute with $cal(E)$; the same holds for $R_X$ and for the Hadamard gate $H$.
 
-*A correction forced by the formalisation.* This section originally stated only the
-$sin(theta / 2) != 0$ condition. But at $theta = pi$ we have $R_Y = mat(0, -1; 1, 0)$,
-which *is* monomial (a permutation matrix times $-1$) and does commute with dephasing.
-The precise statement is that $R_Y(theta)$ is monomial *if and only if* $theta in pi bb(Z)$.
-The Lean formalisation (`not_isMonomial_RY` in `formal/Dephasing.lean`) uses exactly the
-two-condition form.
+*A condition that is easy to get wrong.* It is not enough that $sin(theta / 2) != 0$.
+At $theta = pi$ we have $R_Y = mat(0, -1; 1, 0)$, which *is* monomial (a permutation
+matrix times $-1$) and does commute with dephasing. The precise statement is that
+$R_Y(theta)$ is monomial *if and only if* $theta in pi bb(Z)$: both conditions have to
+hold together. The formalisation of Section 3.8 uses exactly this two-condition form.
 
-*A necessary sharpening.* Earlier project documents state that dephasing must be
-inserted "before a layer containing $R_Y / R_Z$". The precise statement is that
-*$R_Z$ commutes with dephasing on its own* (it is diagonal, hence monomial), and that
+*A point that is easy to misread.* Placing dephasing before a layer that contains
+$R_Y$ makes it observable; placing it before a layer that contains only $R_Z$ does not.
+*$R_Z$ commutes with dephasing on its own* (it is diagonal, hence monomial), and
 what makes such a layer effective is the $R_Y$ inside it. Numerically, the commutator
 is $0.000 times 10^0$ for $R_Z(0.7)$ and $3.221 times 10^(-1)$ for $R_Y(0.7)$.
 
@@ -433,9 +432,8 @@ The measured values in this project (5 qubits, maximum absolute difference over 
 )
 
 *Independence of the numerical check.* The third row above was produced by two
-independent routes: the channel implementation in `dev/qbn5_encoding.py`, and
-`theory/verify/t5_commutator_placement.py`, which builds the $32 times 32$ density
-matrix directly. Both give *bit-identical* $0.05023467$ (total variation distance
+independent routes: one applies the channel at the circuit level, the other builds the
+$32 times 32$ density matrix directly. Both give *bit-identical* $0.05023467$ (total variation distance
 $0.19299447$). All 25 commutativity checks pass; for the four (control, target)
 combinations of $op("CX")$, and for $op("CZ")$ and $op("SWAP")$,
 $max |D U - U D|$ is $0.000 times 10^0$.
@@ -481,9 +479,8 @@ the two item by item.
 
 == Numerical verification of the theory
 
-Every proposition above has an independent numerical check. The scripts are
-`theory/verify/t5_commutator_placement.py` (*25/25 checks pass*) and
-`theory/verify/t4_kraus_dephasing.py`.
+Every proposition above has an independent numerical check, and all 25 of the
+commutativity assertions it makes pass.
 
 #figure(
   table(
@@ -499,12 +496,12 @@ Every proposition above has an independent numerical check. The scripts are
     [Third setting of Theorem 2 (observable)], [independent $32 times 32$ density-matrix implementation], [*$0.05023467$*],
     [Total variation distance], [$0.5 sum_i |Delta p_i|$], [$0.19299447$],
   ),
-  caption: [Numerical verification of the theory. The last two rows agree bit-for-bit with the output of the project script `dev/qbn5_encoding.py`.],
+  caption: [Numerical verification of the theory. The last two rows agree bit-for-bit with an independent circuit-level computation.],
 )
 
-*Independence of the check.* The verification script does *not* use the channel
-implementation from `dev/qbn5_encoding.py`; it builds the $32 times 32$ density matrix
-directly (`theory/verify/dmtools.py`). Two fully independent routes give bit-identical
+*Independence of the check.* The verification does *not* reuse the circuit-level
+channel implementation; it builds the $32 times 32$ density matrix directly with its
+own matrix utilities. Two fully independent routes give bit-identical
 values $0.05023467$ and $0.19299447$---the strongest cross-check in this section, and
 in the whole dephasing ablation.
 
