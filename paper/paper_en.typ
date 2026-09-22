@@ -42,12 +42,15 @@
     This work is a controlled examination of using a quantum circuit as the output
     layer of a classifier, not an attempt to demonstrate quantum advantage. Building
     on the hybrid Bayesian quantum--classical classifier of Wang et al. (2026), we
-    reproduce its 4-qubit quantum layer with CUDA-Q and extend it with two experiments
+    reproduce its 4-qubit quantum layer with CUDA-Q and extend it with three experiments
     that the original study does not cover: (i) a *capacity cliff* scan over qubit
     count and circuit depth, testing whether performance is monotonic in trainable
-    capacity; and (ii) a *calibration ablation* in which a dephasing operator makes
+    capacity; (ii) a *calibration ablation* in which a dephasing operator makes
     the quantum layer classical, isolating the marginal contribution of quantumness
-    to calibration. Every quantum-circuit result is computed on both CUDA-Q and an
+    to calibration; and (iii) a *hardware verification* on QuTech's Tuna-17
+    superconducting processor, sweeping the delay of end-of-circuit dephasing across
+    five orders of magnitude to locate the scale at which the channel actually appears
+    -- $1$--$4$ execution cycles (about $25$--$100$ ns) are far too short to realise it. Every quantum-circuit result is computed on both CUDA-Q and an
     independently implemented pure-NumPy state-vector simulator, then compared: the
     reproduction pipeline agrees to $4.16 times 10^(-17)$, the largest capacity-scan
     circuit (250 gates) to $3.47 times 10^(-18)$, and the ablation circuit to
@@ -118,6 +121,13 @@ quantumness itself is necessary*. This work supplies that missing step.
     not as a methodological contribution. The two experiments of Section 6 are
     endorsed separately on the reference track: the largest capacity-scan circuit
     at $3.47 times 10^(-18)$ and the ablation circuit at $8.33 times 10^(-17)$.
+  + We *verify the ablation channel itself on hardware*. On QuTech's Tuna-17 we sweep
+    the delay of end-of-circuit dephasing from $1$ to $65536$ execution cycles, covering
+    $T_2$ and $T_1$, and measure where the channel actually appears. The measured
+    quantity is the deviation of the delayed circuit from the undelayed one, against a
+    shot-noise null built by resampling the undelayed distribution, plus a
+    same-circuit different-time drift control. This turns a null result into a
+    calibrated statement about the delay scale a dephasing ablation needs.
   + We honestly report three negative conclusions (see Section 6).
 ]
 
@@ -736,6 +746,132 @@ distributions differ) of its mean predictive distribution from the uniform
   $-0.0086$ with a $95%$ confidence interval of $plus.minus 0.0340$, which covers $0$;
   the accuracy difference is $-0.0907$ ($plus.minus 0.0600$).
   Hence *H2 does not hold*: dephasing did not improve calibration, it destroyed information.
+
+== Hardware verification
+
+Everything on the simulation side rests on the assumption that dephasing is an
+*exact* channel. Section 3.6 already noted that this assumption fails on real hardware,
+and that *the size of the failure is itself a measurable hardware property*.
+This subsection measures it -- and the first thing it measures is the scale.
+
+*Protocol.* The hardware is QuTech's *Tuna-17*: $17$ transmons in a ninja-star topology,
+with a native gate set that contains $op("CZ")$ but not $op("CX")$.
+The $5$-qubit ring circuit of this study has *no* one-to-one mapping onto that topology
+(the graph contains no $5$-cycle), so it is routed with $op("SWAP")$ gates before submission.
+After routing, the compiled circuits of all five arms are *identical*
+($op("CX") = 10$, $op("SWAP") = 2$, depth $18$, $42$ gates);
+the only difference between arms A and C is five `wait` instructions -- a clean controlled comparison.
+Each arm contributes $8$ samples, $40$ circuits in total, at $8192$ shots each.
+The bit order is measured rather than assumed: applying an $X$ gate to $q_0$, $q_2$ and $q_4$
+returns `00001`, `00100` and `10000` respectively, so the platform's classical bit order
+is reversed into the $q_0$-leftmost convention used here.
+
+One point about the statistical protocol has to be stated. The comparison is made in
+*the classifier's $8$-class readout space* (the readout is taken over the first $3$ logical
+qubits), and the observable is the *mean* $max abs(Delta P)$ over $8$ samples,
+so the null hypothesis must be the distribution
+of that same $8$-sample mean. Using a single-sample null systematically understates the
+power of the test and turns a real effect into an insignificant one.
+Every $p$ value below therefore uses the former: arm A's measured distribution is treated as
+the population, two independent $8192$-shot draws are taken from it, and the procedure is
+repeated $2 times 10^4$ times with $8$ samples averaged each time.
+The null is thus $max abs(Delta P) = 0.00910 plus.minus 0.00109$ (95th percentile $0.01097$).
+
+#figure(table(
+  columns: (auto, auto, auto, auto, auto, auto),
+  table.header([*Arm*], [*Delay (cycles)*], [*$max abs(Delta P)$*], [*TVD*], [*Ratio*], [*$p$*]),
+  [A no delay], [$(0, 0)$], [---], [---], [---], [---],
+  [B1 dephasing (after encoding)], [$(1, 0)$], [0.00943], [0.01620], [1.04], [0.366],
+  [B4 dephasing (after encoding)], [$(4, 0)$], [0.01170], [0.01945], [1.29], [0.014],
+  [C1 dephasing (end of circuit)], [$(0, 1)$], [0.01057], [0.01718], [1.16], [0.093],
+  [C4 dephasing (end of circuit)], [$(0, 4)$], [0.00966], [0.01807], [1.06], [0.295],
+), caption: [The four delayed arms against the undelayed arm A on Tuna-17, $8$ samples and
+  $8192$ shots per arm. The ratio is with respect to the pure shot-noise null ($0.00910$).
+  The largest value, $1.29$, is also the only marginal entry under a Bonferroni correction
+  across four arms ($alpha = 0.05 slash 4 = 0.0125$), and it does not survive that correction.],) <fig:hw-ablation>
+
+*A same-circuit, different-time drift control.* The easiest entry in that table to
+over-read is B4 at $1.29$. Deciding whether it is physics needs a control with no variable
+at all: the circuit of the $tau = 0$ block is gate-for-gate identical to arm A, and was only
+submitted about an hour later. Subtracting the two gives $max abs(Delta P) = 0.00883$
+(two samples: $0.00755$ and $0.01012$), which is indistinguishable from the pure shot-noise
+value of $0.00910$. In other words, *hardware drift over an hour sits below the noise floor,
+and the differences of all four delayed arms sit in that same range*.
+
+*Why $8192$ shots could not see it.* This is a question of statistical *power*, not of the
+channel being absent. The cQASM specification defines the `wait` parameter as a number whose
+unit is "the duration of a single-qubit gate on the backend, i.e. an execution cycle",
+and the Quantum Inspire knowledge base likewise says "idle the qubit ... for the given
+number of cycles". A superconducting transmon has a single-qubit gate time of about $25$ ns,
+so $1$--$4$ cycles cover only a small fraction of $T_2$ and the induced deviation is
+correspondingly small; the noise floor at $8192$ shots is $0.00910$, which is $3.5$ times
+coarser than the $0.00260$ the next subsection reaches at $65536$ shots.
+
+The meaning of this result is therefore a *qualification*, not a refutation: the four-arm
+protocol simply does not have the power, at $8192$ shots, to resolve a channel of that scale,
+and so cannot be used to test the hardware corollary of Theorem 2.
+The next subsection raises the shot count eightfold and sweeps the delay across five orders
+of magnitude -- and the signal appears.
+
+== Hardware delay dose response
+
+Pushing the delay from $1$ execution cycle to $65536$ (about $1.6$ ms, spanning both $T_2$ and
+$T_1$) yields a logarithmic dose-response curve covering five orders of magnitude.
+Each point uses the same batch of samples and the same circuit, changing only the `wait`
+parameter, at $65536$ shots per circuit -- eight times the previous subsection, so the noise
+falls by a factor $1 slash sqrt(8) approx 0.35$.
+A gate-by-gate comparison of the compiled circuits confirms that the gate sequence is identical
+at every $tau$ ($42$ operations in all) and that the only difference is the value of `wait`;
+$tau = 0$ is gate-for-gate identical to arm A.
+
+One artefact has to be ruled out first. The cQASM specification notes that `wait` *also*
+acts as a barrier, telling the scheduler that instructions may not be reordered across it,
+so "adding a `wait`" and "adding idle time" are not the same operation.
+In this design the `wait` is placed *immediately before the measurement*, after which there
+are no gates left to reorder; the barrier property therefore has nothing to act on, and the
+only physical effect is idle time. This is also why the dose sweep uses the tail position
+rather than the front position.
+
+There are two null hypotheses here, and the second one is the right one.
+(a) *A pure shot-noise null*: arm $tau = 0$'s measured distribution is treated as the population
+and two independent $65536$-shot draws are taken from it. This answers "how small a deviation is
+statistically resolvable", and gives $0.00261$.
+(b) *Same-circuit, different-time repeatability*: the $tau = 0$ blocks of the two sweeps are
+*gate-for-gate identical* circuits at the same shot count, submitted at different times.
+Subtracting them gives the spread this device actually produces when it simply runs the identical
+circuit again: $0.01105$ (two samples: $0.00443$ and $0.01767$).
+Real hardware is not random only through shots -- drift and calibration move it too -- so (b) is
+more than four times larger than (a).
+
+#include "tables/tau_dose_en.typ"
+
+#figure(
+  image("figs/tau_dose.svg", width: 100%),
+  caption: [Delay dose response. Panel (a) is the deviation from the undelayed circuit: the blue
+    band is the $95%$ interval of the pure shot-noise null and the red dashed line is this
+    device's *same-circuit different-time repeatability* of $0.01105$. Panel (b) is the
+    probability that the readout returns all zeros. Both saturate past $tau = 4096$, and the
+    saturation point is set by $T_1$.],
+) <fig:tau-curve>
+
+*No effect smaller than (b) can be attributed to the delay*, and this changes the reading
+directly. The points $tau = 1$, $4$ and $16$ are $0.26$, $0.39$ and $0.66$ times the repeatability:
+they *pass* the shot-noise test ($1.09$, $1.64$ and $2.78$ times) while sitting entirely inside the
+spread of the device's own repeats. Reporting only the shot-noise null would have presented these
+three points as the channel already appearing.
+The first undeniable signal is $tau = 64$ (about $1.6$ microseconds): $2.21$ times the
+repeatability and $9.36$ times the shot noise, reaching $27$ times the repeatability by
+$tau = 1024$.
+
+Beyond $tau = 4096$ the curve saturates: $max abs(Delta P)$ settles at $0.81$ and $P(00000)$ at
+$0.823$. That is exactly where $T_1$ relaxation drives the state to $|0 dots 0 angle$, and the
+$0.82$ rather than $1$ is the readout assignment-fidelity limit.
+The saturation point also fixes the $T_1$ scale: it falls between $1024$ and $4096$ cycles, i.e.
+tens of microseconds, consistent with a typical superconducting transmon.
+
+For the corollary in Section 3.6 this is a *direct* observation: the theorem assumes exact
+dephasing, whereas the hardware delivers dephasing *plus* relaxation, and the relaxation fully
+dominates the measurement distribution at the $T_1$ scale.
 
 = Discussion
 

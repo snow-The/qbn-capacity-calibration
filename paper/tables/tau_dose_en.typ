@@ -1,0 +1,20 @@
+#figure(table(
+  columns: (auto, auto, auto, auto, auto, auto),
+  table.header([*$tau$ (cycles)*], [*$P(00000)$*], [*$max abs(Delta P)$*], [*vs. repeatability*], [*TVD*], [*KL vs uniform*]),
+  [0], [0.01266], [0.00000], [---], [0.00000], [0.29329],
+  [1], [0.01305], [0.00283], [0.26], [0.01267], [0.29050],
+  [4], [0.01343], [0.00427], [0.39], [0.01707], [0.28260],
+  [16], [0.01569], [0.00726], [0.66], [0.02898], [0.26850],
+  [64], [0.02592], [0.02438], [2.21], [0.10412], [0.22182],
+  [256], [0.06920], [0.05727], [5.18], [0.31583], [0.24559],
+  [1024], [0.31511], [0.30299], [27.43], [0.63237], [0.97887],
+  [4096], [0.76219], [0.75008], [67.90], [0.85719], [2.45674],
+  [16384], [0.82329], [0.81117], [73.43], [0.87480], [2.68381],
+  [65536], [0.82332], [0.81120], [73.43], [0.87511], [2.68495],
+), caption: [Delay dose response on Tuna-17: the same batch of samples and the same circuit,
+  changing only the number of `wait` cycles before measurement, at $65536$ shots per point.
+  $max abs(Delta P)$ and TVD are against the $tau = 0$ $32$-dimensional readout distribution;
+  $tau = 1$--$64$ use $7$ samples each and the rest one each.
+  "vs. repeatability" is relative to the same-circuit different-time repeatability of $0.01105$;
+  the first three points are *below* $1$, i.e. they do not exceed what this device reproduces
+  when it simply runs the identical circuit again.],) <fig:tau-dose>

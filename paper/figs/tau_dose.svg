@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="390" viewBox="0 0 1000 390">
+<rect width="1000" height="390" fill="#ffffff"/>
+<rect x="74.0" y="36.0" width="410.0" height="300.0" fill="none" stroke="#333" stroke-width="1"/>
+<text x="279.0" y="25.0" font-family="Times New Roman, Liberation Serif, serif" font-size="13" text-anchor="middle">(a) deviation from the undelayed circuit</text>
+<line x1="74.0" y1="336.0" x2="484.0" y2="336.0" stroke="#dddddd" stroke-width="1"/>
+<text x="68.0" y="339.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.0000</text>
+<line x1="74.0" y1="261.0" x2="484.0" y2="261.0" stroke="#dddddd" stroke-width="1"/>
+<text x="68.0" y="264.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.2312</text>
+<line x1="74.0" y1="186.0" x2="484.0" y2="186.0" stroke="#dddddd" stroke-width="1"/>
+<text x="68.0" y="189.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.4624</text>
+<line x1="74.0" y1="111.0" x2="484.0" y2="111.0" stroke="#dddddd" stroke-width="1"/>
+<text x="68.0" y="114.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.6936</text>
+<line x1="74.0" y1="36.0" x2="484.0" y2="36.0" stroke="#dddddd" stroke-width="1"/>
+<text x="68.0" y="39.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.9248</text>
+<text x="24.0" y="186.0" font-family="Times New Roman, Liberation Serif, serif" font-size="11" text-anchor="middle" transform="rotate(-90 24.0 186.0)">max |ΔP|</text>
+<rect x="74.0" y="335.0" width="410.0" height="1.2" fill="#cfe3f7" opacity="0.6"/>
+<line x1="74.0" y1="332.4" x2="484.0" y2="332.4" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5,3"/>
+<text x="478.0" y="328.4" font-family="Times New Roman, Liberation Serif, serif" font-size="9.5" fill="#c0392b">device repeatability</text>
+<line x1="81.0" y1="336.0" x2="81.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="81.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">0</text>
+<line x1="94.0" y1="336.0" x2="94.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="94.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">1</text>
+<line x1="140.8" y1="336.0" x2="140.8" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="140.8" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">4</text>
+<line x1="187.5" y1="336.0" x2="187.5" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="187.5" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">16</text>
+<line x1="234.2" y1="336.0" x2="234.2" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="234.2" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">64</text>
+<line x1="281.0" y1="336.0" x2="281.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="281.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">256</text>
+<line x1="327.8" y1="336.0" x2="327.8" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="327.8" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">1024</text>
+<line x1="374.5" y1="336.0" x2="374.5" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="374.5" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">4096</text>
+<line x1="421.2" y1="336.0" x2="421.2" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="421.2" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">16384</text>
+<line x1="468.0" y1="336.0" x2="468.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="468.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">65536</text>
+<text x="279.0" y="374.0" font-family="Times New Roman, Liberation Serif, serif" font-size="11" text-anchor="middle">wait cycles (log scale)</text>
+<polyline points="94.0,335.1 140.8,334.6 187.5,333.6 234.2,328.1 281.0,317.4 327.8,237.7 374.5,92.7 421.2,72.9 468.0,72.8" fill="none" stroke="#12507b" stroke-width="1.9"/>
+<circle cx="94.0" cy="335.1" r="3.2" fill="#12507b"/>
+<circle cx="140.8" cy="334.6" r="3.2" fill="#12507b"/>
+<circle cx="187.5" cy="333.6" r="3.2" fill="#12507b"/>
+<circle cx="234.2" cy="328.1" r="3.2" fill="#12507b"/>
+<circle cx="281.0" cy="317.4" r="3.2" fill="#12507b"/>
+<circle cx="327.8" cy="237.7" r="3.2" fill="#12507b"/>
+<circle cx="374.5" cy="92.7" r="3.2" fill="#12507b"/>
+<circle cx="421.2" cy="72.9" r="3.2" fill="#12507b"/>
+<circle cx="468.0" cy="72.8" r="3.2" fill="#12507b"/>
+<rect x="564.0" y="36.0" width="410.0" height="300.0" fill="none" stroke="#333" stroke-width="1"/>
+<text x="769.0" y="25.0" font-family="Times New Roman, Liberation Serif, serif" font-size="13" text-anchor="middle">(b) mass concentrating on 00000</text>
+<line x1="564.0" y1="336.0" x2="974.0" y2="336.0" stroke="#dddddd" stroke-width="1"/>
+<text x="558.0" y="339.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.000</text>
+<line x1="564.0" y1="261.0" x2="974.0" y2="261.0" stroke="#dddddd" stroke-width="1"/>
+<text x="558.0" y="264.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.231</text>
+<line x1="564.0" y1="186.0" x2="974.0" y2="186.0" stroke="#dddddd" stroke-width="1"/>
+<text x="558.0" y="189.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.461</text>
+<line x1="564.0" y1="111.0" x2="974.0" y2="111.0" stroke="#dddddd" stroke-width="1"/>
+<text x="558.0" y="114.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.692</text>
+<line x1="564.0" y1="36.0" x2="974.0" y2="36.0" stroke="#dddddd" stroke-width="1"/>
+<text x="558.0" y="39.0" font-family="Times New Roman, Liberation Serif, serif" font-size="10" text-anchor="end">0.922</text>
+<text x="514.0" y="186.0" font-family="Times New Roman, Liberation Serif, serif" font-size="11" text-anchor="middle" transform="rotate(-90 514.0 186.0)">P(00000)</text>
+<line x1="571.0" y1="336.0" x2="571.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="571.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">0</text>
+<line x1="584.0" y1="336.0" x2="584.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="584.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">1</text>
+<line x1="630.8" y1="336.0" x2="630.8" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="630.8" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">4</text>
+<line x1="677.5" y1="336.0" x2="677.5" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="677.5" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">16</text>
+<line x1="724.2" y1="336.0" x2="724.2" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="724.2" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">64</text>
+<line x1="771.0" y1="336.0" x2="771.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="771.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">256</text>
+<line x1="817.8" y1="336.0" x2="817.8" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="817.8" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">1024</text>
+<line x1="864.5" y1="336.0" x2="864.5" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="864.5" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">4096</text>
+<line x1="911.2" y1="336.0" x2="911.2" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="911.2" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">16384</text>
+<line x1="958.0" y1="336.0" x2="958.0" y2="340.0" stroke="#333" stroke-width="1"/>
+<text x="958.0" y="352.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9" text-anchor="middle">65536</text>
+<text x="769.0" y="374.0" font-family="Times New Roman, Liberation Serif, serif" font-size="11" text-anchor="middle">wait cycles (log scale)</text>
+<polyline points="584.0,331.8 630.8,331.6 677.5,330.9 724.2,327.6 771.0,313.5 817.8,233.5 864.5,88.0 911.2,68.2 958.0,68.1" fill="none" stroke="#12507b" stroke-width="1.9"/>
+<circle cx="584.0" cy="331.8" r="3.2" fill="#12507b"/>
+<circle cx="630.8" cy="331.6" r="3.2" fill="#12507b"/>
+<circle cx="677.5" cy="330.9" r="3.2" fill="#12507b"/>
+<circle cx="724.2" cy="327.6" r="3.2" fill="#12507b"/>
+<circle cx="771.0" cy="313.5" r="3.2" fill="#12507b"/>
+<circle cx="817.8" cy="233.5" r="3.2" fill="#12507b"/>
+<circle cx="864.5" cy="88.0" r="3.2" fill="#12507b"/>
+<circle cx="911.2" cy="68.2" r="3.2" fill="#12507b"/>
+<circle cx="958.0" cy="68.1" r="3.2" fill="#12507b"/>
+<rect x="84.0" y="48.0" width="15" height="9" fill="#cfe3f7" opacity="0.6" stroke="#8fb8dd"/>
+<text x="104.0" y="56.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9.5">95% shot-noise interval</text>
+<line x1="84.0" y1="66.0" x2="99.0" y2="66.0" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5,3"/>
+<text x="104.0" y="70.0" font-family="Times New Roman, Liberation Serif, serif" font-size="9.5" fill="#c0392b">device repeatability</text>
+</svg>
